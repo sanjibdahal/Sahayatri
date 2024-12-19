@@ -1,56 +1,48 @@
-import { View, StyleSheet, Text, Image, TextInput, TouchableOpacity, ImageBackground } from "react-native";
+import { View, StyleSheet, Text, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import React from 'react';
-import { LinearGradient } from "expo-linear-gradient";
-import { Link } from 'expo-router';
+import React from "react";
+import Button from "@/components/Button";
+import { images } from "../constants";
+import { router } from "expo-router";
 
-import "../global.css";
 
-export default function HomeScreen() {
+export default function OnBoardingScreen() {
+  return (
+    <SafeAreaView className="h-full w-full"> 
+      <View className="flex-1 flex justify-center items-center px-3">
+        <View className="w-full h-44 flex justify-center items-center mt-20">
+          <Image source={images.OnBoardingCar} className="h-full w-full"/>
+        </View>
+        <View className="flex-1 justify-center items-center w-full">
+          <Text className="text-4xl font-plusjakartasans_600semibold">
+            Share the Road,
+          </Text>
+          <Text className="text-4xl font-plusjakartasans_600semibold">
+            Share the Ride
+          </Text>
+          <Text className="text-lg font-plusjakartasans text-gray">
+            Share rides and connect with your {"\n"} college community with Sahayatri 
+          </Text>
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <View style={{ flex: 1 }}>
-                <View style={{ width: '100%', height: 250, backgroundColor: 'red' }}>
-                    <ImageBackground source={require('@/assets/images/car.png')} style={styles.backgroundImage}>
-                        <LinearGradient colors={['transparent', 'rgba(255,255,255,1)']} style={styles.gradient} />
-                    </ImageBackground>
-                </View>
-                <View style={{ flex: 1, padding: 10 }}>
-                    <Text className="color-purple-500 text-4xl font-plusjakartasans">Let's get started hh!</Text>
-                    <Link href="/profile">Go to Profile Section</Link>
-                    <Text className="text-4xl color-purple-700 ">Hello </Text>
-                </View>
-            </View>
-        </SafeAreaView >
-    );
+          <Button title="Get Started" onPress={() => router.push("/(auth)/sign-in")} containerStyles={'mt-20 w-full'} />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-    },
-    gradient: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        height: 250,
-        width: '100%',
-    },
-    backgroundImage: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 250,
-        width: '100%',
-    },
-    titleContainer: {
-
-    },
-    titleText: {
-        fontSize: 24,
-        fontFamily: 'PlusJakartaSans_700Bold',
-    }
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    fontFamily: "PlusJakartaSans",
+  },
+  backgroundImage: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 250,
+    width: "100%",
+    padding: 20, 
+  },
 });
