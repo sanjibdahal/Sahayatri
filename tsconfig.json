@@ -16,5 +16,5 @@
     "app/index.jsx",
     "app/_layout.jsx",
     "nativewind-env.d.ts"
-, "app/(auth)/sign-up.jsx", "app/(auth)/_layout.jsx", "app/(tabs)/profile.jsx", "app/(tabs)/_layout.jsx", "app/(tabs)/home.jsx", "app/(tabs)/index.jsx"  ]
+, "app/(auth)/sign-up.jsx", "app/(auth)/_layout.jsx", "app/(root)/(tabs)/profile.jsx", "app/(root)/_layout.jsx", "app/(root)/(tabs)/home.jsx", "app/(root)/(tabs)/index.jsx"  ]
 }

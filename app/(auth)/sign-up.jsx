@@ -180,7 +180,7 @@ export default function SignUp() {
             </Text>
             <Button
               title="Browse Home"
-              onPress={() => router.push('/(tabs)/home')}
+              onPress={() => router.push('/home')}
               className="mt-5"
             />
           </View>

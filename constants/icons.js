@@ -33,6 +33,7 @@ import target from "../assets/icons/target.png";
 import to from "../assets/icons/to.png";
 import phone from "../assets/icons/phone.png";
 import addimage from "../assets/icons/add_image.png";
+import message from "../assets/icons/message.png";
 
 export default {
   home,
@@ -70,4 +71,5 @@ export default {
   to,
   phone,
   addimage,
+  message,
 };

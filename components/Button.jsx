@@ -7,17 +7,18 @@ const Button = ({
   containerStyles,
   textStyles,
   isLoading,
+  isSecondary,
 }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      className={`bg-primary rounded-xl min-h-[62px] flex flex-row justify-center items-center w-full ${containerStyles} ${
+      className={`rounded-xl min-h-[62px] flex flex-row justify-center items-center w-full ${containerStyles} ${
         isLoading ? "opacity-50" : ""
-      }`}
+      } ${isSecondary ? "bg-transparent border border-gray" : "bg-primary"}`}
       disabled={isLoading}
     >
-      <Text className={`font-plusjakartasans_700bold color-white text-xl ${textStyles}`}>
+      <Text className={`font-plusjakartasans_700bold text-xl ${textStyles} ${isSecondary ? "color-black" : "color-white"}`}>
         {title}
       </Text>
 

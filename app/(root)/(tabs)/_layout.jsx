@@ -2,25 +2,29 @@ import { Tabs } from "expo-router";
 import { Image, ImageSourcePropType, View } from "react-native";
 
 import { icons } from "@/constants";
+import Feather from '@expo/vector-icons/Feather';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 const TabIcon = ({
   source,
   focused,
 }) => (
-  <View
-    className={`flex flex-row justify-center items-center rounded-full ${focused ? "bg-[#EEEEEE]" : ""}`}
-  >
-    <View
-      className={`rounded-full w-12 h-12 items-center justify-center ${focused ? "bg-[#EEEEEE]" : ""}`}
-    >
+//   <View
+//     className={`flex flex-row justify-center items-center rounded-full ${focused ? "bg-gray" : ""}`}
+//   >
+//     <View
+//       className={`rounded-full w-12 h-12 items-center justify-center ${focused ? "bg-primary" : ""}`}
+//     >
       <Image
         source={source}
         tintColor="white"
         resizeMode="contain"
         className="w-7 h-7"
       />
-    </View>
-  </View>
+//     </View>
+//   </View>
 );
 
 export default function Layout() {
@@ -28,17 +32,17 @@ export default function Layout() {
     <Tabs
       // initialRouteName="index"
       screenOptions={{
-        tabBarActiveTintColor: "white",
-        tabBarInactiveTintColor: "white",
-        tabBarShowLabel: false,
+        tabBarActiveTintColor: '#57BE5E',
+        tabBarInactiveTintColor: "gray",
+        tabBarShowLabel: true,
         tabBarStyle: {
           backgroundColor: "#333333",
           borderRadius: 50,
-          paddingBottom: 0, // ios only
+          paddingBottom: 30, // ios only
           overflow: "hidden",
-          marginHorizontal: 20,
-          marginBottom: 20,
-          height: 78,
+          marginHorizontal: 10,
+          marginBottom: 5,
+          height: 60,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -52,8 +56,8 @@ export default function Layout() {
         options={{
           title: "Home",
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.home} focused={focused} />
+          tabBarIcon: ({ color }) => (
+            <Feather name="home" size={24} color={color} />
           ),
         }}
       />
@@ -62,8 +66,9 @@ export default function Layout() {
         options={{
           title: "Rides",
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.list} focused={focused} />
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="list-ul" size={24} color={color} />
+
           ),
         }}
       />
@@ -72,8 +77,8 @@ export default function Layout() {
         options={{
           title: "Chat",
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.chat} focused={focused} />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="chatbubble-ellipses-outline" size={24} color={color} />
           ),
         }}
       />
@@ -82,8 +87,8 @@ export default function Layout() {
         options={{
           title: "Profile",
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.profile} focused={focused} />
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="user-circle" size={24} color={color} />
           ),
         }}
       />
