@@ -31,7 +31,7 @@ const InputField = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View className="my-2 w-full">
           <Text
-            className={`text-lg font-plusjakartasans_600semibold mb-3 ${labelStyle}`}
+            className={`text-lg color-graysecondary font-plusjakartasans_600semibold mb-3 ${labelStyle}`}
           >
             {title}
           </Text>
