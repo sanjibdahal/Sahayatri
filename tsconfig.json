@@ -13,8 +13,8 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "app/index.jsx",
-    "app/_layout.jsx",
+    "app/index.tsx",
+    "app/_layout.tsx",
     "nativewind-env.d.ts"
-, "app/(auth)/sign-up.jsx", "app/(auth)/_layout.jsx", "app/(root)/(tabs)/profile.jsx", "app/(root)/_layout.jsx", "app/(root)/(tabs)/home.jsx", "app/(root)/(tabs)/index.jsx"  ]
+, "app/(auth)/sign-up.tsx", "app/(auth)/_layout.tsx", "app/(root)/(tabs)/profile.tsx", "app/(root)/_layout.tsx", "app/(root)/(tabs)/home.tsx", "app/(root)/(tabs)/index.jsx"  ]
 }

@@ -13,7 +13,7 @@ const Home = () => {
   const handleSignOut = () => {};
 
   const BookaRide = () => {
-    router.push("/(root)/maps");
+    router.push("/(root)/maps" as any);
   };
   const PublishaRide = () => {};
 

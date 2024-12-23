@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { icons } from "../constants";
 import { useState } from "react";
+import { InputFieldProps } from "@/types/type";
 
 const InputField = ({
   title,
@@ -22,7 +23,7 @@ const InputField = ({
   iconStyle,
   className,
   ...props
-}) => {
+}: InputFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <KeyboardAvoidingView

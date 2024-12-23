@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import InputField from "@/components/InputField";
+import React from "react";
 
 const Profile = () => {
   // const { user } = useUser();
@@ -16,12 +17,10 @@ const Profile = () => {
       phoneNumber: "9841234567",
     },
     verified: false,
-    externalAccounts: [
-      {
-        imageUrl:
-          "https://firebasestorage.googleapis.com/v0/b/daily-algo.appspot.com/o/images%2Fsanjib.jpg?alt=media&token=ee62ded6-708d-43bf-a5b3-f04a36a22d6a",
-      },
-    ],
+
+    imageUrl:
+      "https://firebasestorage.googleapis.com/v0/b/daily-algo.appspot.com/o/images%2Fsanjib.jpg?alt=media&token=ee62ded6-708d-43bf-a5b3-f04a36a22d6a",
+
   };
 
   return (
@@ -37,7 +36,7 @@ const Profile = () => {
         <View className="flex items-center justify-center my-5">
           <Image
             source={{
-              uri: user?.externalAccounts[0]?.imageUrl ?? user?.imageUrl,
+              uri: user?.imageUrl,
             }}
             style={{ width: 110, height: 110, borderRadius: 110 / 2 }}
             className=" rounded-full h-[110px] w-[110px] border-[3px] border-white shadow-sm shadow-neutral-300"

@@ -1,13 +1,13 @@
 import { View, Text, ImageBackground, ScrollView, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { React, useState } from "react";
+import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link } from "expo-router";
+import Link from "expo-router/link";
 import Button from "@/components/Button";
 import InputField from "@/components/InputField";
 import { ReactNativeModal } from "react-native-modal";
-import { router } from "expo-router";
 import { icons } from "@/constants";
+import { router } from "expo-router";
 
 
 export default function SignUp() {
@@ -119,7 +119,7 @@ export default function SignUp() {
                 Already have an account?
               </Text>
               <Link
-                href="/sign-in"
+                href={"/sign-in" as any}
                 className="text-lg font-plusjakartasans_600semibold color-primary"
               >
                 Login
@@ -142,10 +142,10 @@ export default function SignUp() {
               Verification
             </Text>
             <Text className="font-plusjakartasans_500medium mb-5">
-              We've sent a verification code to {form.email}.
+              We've sent a verification code to {form.phonenumber}.
             </Text>
             <InputField
-              label={"Code"}
+              title={"Code"}
               icon={icons.lock}
               placeholder={"12345"}
               value={verification.code}
@@ -180,7 +180,7 @@ export default function SignUp() {
             </Text>
             <Button
               title="Browse Home"
-              onPress={() => router.push('/home')}
+              onPress={() => router.push('/(root)/(tabs)/home' as any)}
               className="mt-5"
             />
           </View>

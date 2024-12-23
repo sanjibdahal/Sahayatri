@@ -5,9 +5,9 @@ import {
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { React, useState } from "react";
+import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link } from "expo-router";
+import {Link} from "expo-router";
 import Button from "@/components/Button";
 import InputField from "@/components/InputField";
 import { icons } from "@/constants";
@@ -74,7 +74,7 @@ export default function SignIn() {
                 Don't have an account?
               </Text>
               <Link
-                href="/sign-up"
+                href={"/sign-up" as any}
                 className="text-lg font-plusjakartasans_600semibold color-primary"
               >
                 Signup

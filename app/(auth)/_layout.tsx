@@ -1,7 +1,7 @@
 import { Redirect, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
-import { Loader } from "@/components/Loader";
+// import { Loader } from "@/components/Loader";
 // import { useGlobalContext } from "../../context/GlobalProvider";
 
 const AuthLayout = () => {
@@ -12,14 +12,13 @@ const AuthLayout = () => {
   // if (!loading && isLogged) return <Redirect href="/home" />;
 
   return (
-    <>
-      <Stack>
-        <Stack.Screen name="welcome" options={{ headerShown: false }} />
-        <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-        <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-      </Stack>
-      <StatusBar style="light" backgroundColor="#161622" />
-    </>
+
+    <Stack>
+      <Stack.Screen name="welcome" options={{ headerShown: false }} />
+      <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+      <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+    </Stack>
+
   );
 };
 

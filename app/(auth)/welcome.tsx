@@ -24,7 +24,7 @@ export default function Welcome() {
             Share rides and connect with your {"\n"} college community with Sahayatri 
           </Text>
 
-          <Button title="Get Started" onPress={() => router.push("/(auth)/sign-in")} containerStyles={'mt-20 w-full'} />
+          <Button title="Get Started" onPress={() => router.push("/(auth)/sign-in" as any)} containerStyles={'mt-20 w-full'} />
         </View>
       </View>
     </SafeAreaView>

@@ -1,5 +1,6 @@
 import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
 import React from "react";
+import { ButtonProps } from "@/types/type";
 
 const Button = ({
   title,
@@ -8,7 +9,7 @@ const Button = ({
   textStyles,
   isLoading,
   isSecondary,
-}) => {
+}: ButtonProps) => {
   return (
     <TouchableOpacity
       onPress={onPress}
