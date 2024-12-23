@@ -4,9 +4,9 @@ import { StyleSheet } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 
-const RouteMap = ({ destination }) => {
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [routeCoordinates, setRouteCoordinates] = useState([]);
+const RouteMap = ({ userLocation, destination }: { userLocation: { latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number; } | null; destination: any }) => {
+  const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } >();
+  const [routeCoordinates, setRouteCoordinates] = useState<{ latitude: number; longitude: number }[]>([]);
 
   useEffect(() => {
     getCurrentLocation();
@@ -37,10 +37,14 @@ const RouteMap = ({ destination }) => {
   };
 
   const calculateRoute = async () => {
-    const apiKey = '5b3ce3597851110001cf6248ab302a194b0e4df5a099b088e76d8485'; 
-    const apiUrl = 'https://api.openrouteservice.org/v2/directions/driving-car';
+    const apiKey = process.env.EXPO_PUBLIC_DIRECTION_API_KEY; 
+    const apiUrl = process.env.EXPO_PUBLIC_DIRECTION_API_URL;
     
     try {
+      if (!currentLocation) {
+        console.error('Current location is null');
+        return;
+      }
       const response = await fetch(`${apiUrl}?api_key=${apiKey}&start=${currentLocation.longitude},${currentLocation.latitude}&end=${destination.longitude},${destination.latitude}`);
       
       if (!response.ok) {
@@ -51,7 +55,7 @@ const RouteMap = ({ destination }) => {
       
       if (data.features && data.features.length > 0) {
         const routeGeometry = data.features[0].geometry.coordinates;
-        const newRouteCoordinates = routeGeometry.map(coord => ({
+        const newRouteCoordinates = routeGeometry.map((coord: [number, number]) => ({
           longitude: coord[0],
           latitude: coord[1]
         }));
@@ -67,8 +71,12 @@ const RouteMap = ({ destination }) => {
   };
 
   const fallbackToStraightLine = () => {
+    if (!currentLocation) {
+      console.error('Current location is null');
+      return;
+    }
     const newRouteCoordinates = [
-      currentLocation,
+      { latitude: currentLocation.latitude, longitude: currentLocation.longitude },
       { latitude: destination.latitude, longitude: destination.longitude },
     ];
     setRouteCoordinates(newRouteCoordinates);

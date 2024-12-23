@@ -12,7 +12,7 @@ const Home = () => {
 
   const handleSignOut = () => {};
 
-  const BookaRide = () => {
+  const RequestaRide = () => {
     router.push("/(root)/maps" as any);
   };
   const PublishaRide = () => {};
@@ -35,9 +35,9 @@ const Home = () => {
 
         <Image source={images.Ride} className="mt-28" />
         <Button
-          title="Book a ride"
+          title="Request a ride"
           containerStyles={"mt-5"}
-          onPress={() => BookaRide()}
+          onPress={() => RequestaRide()}
         />
         <Button
           title="Publish a ride"

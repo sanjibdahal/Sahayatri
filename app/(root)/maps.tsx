@@ -8,13 +8,13 @@ import RouteMap from './RouteMap';
 
 export default function Maps() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [region, setRegion] = useState(null);
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [filteredLocations, setFilteredLocations] = useState([]);
+  const [region, setRegion] = useState<{ latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number; } | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<{ name: string; address: string; latitude: number; longitude: number; } | null>(null);
+  const [filteredLocations, setFilteredLocations] = useState<{ name: string; address: string; latitude: number; longitude: number; }[]>([]);
   const [currentPlace, setCurrentPlace] = useState('Fetching location...');
-  const [userLocation, setUserLocation] = useState(null);
-  const [locationPermission, setLocationPermission] = useState(null);
-  const [destination, setDestination] = useState(null);
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number; } | null>(null);
+  const [locationPermission, setLocationPermission] = useState<boolean | null>(null);
+  const [destination, setDestination] = useState<{ name: string; address: string; latitude: number; longitude: number; } | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -65,7 +65,7 @@ export default function Maps() {
     }
   };
 
-  const handleRegionChange = (newRegion) => {
+  const handleRegionChange = (newRegion: { latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number; }) => {
     setRegion(newRegion);
     const closest = findClosestLocation(newRegion);
     if (closest) {
@@ -73,7 +73,7 @@ export default function Maps() {
     }
   };
 
-  const handleLocationSelect = (location) => {
+  const handleLocationSelect = (location: { name: string; address: string; latitude: number; longitude: number; }) => {
     setSelectedLocation(location);
     setDestination(location);
     setRegion({
@@ -87,16 +87,16 @@ export default function Maps() {
     setFilteredLocations([]);
   };
 
-  const findClosestLocation = (region) => {
+  const findClosestLocation = (region: { latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number; }) => {
     return Locations.reduce((closest, location) => {
       const distance = Math.sqrt(
         Math.pow(location.latitude - region.latitude, 2) +
         Math.pow(location.longitude - region.longitude, 2)
       );
-      return closest == null || distance < closest.distance
+      return (closest as any).distance === undefined || distance < (closest as any).distance
         ? { ...location, distance }
         : closest;
-    }, null);
+    }, { name: '', address: '', latitude: 0, longitude: 0, distance: Infinity });
   };
 
   if (!region) {
