@@ -2,7 +2,7 @@ import { View, Text, ImageBackground, ScrollView, Image, Alert } from "react-nat
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import Link from "expo-router/link";
+import { Link } from "expo-router";
 import Button from "@/components/Button";
 import InputField from "@/components/InputField";
 import { ReactNativeModal } from "react-native-modal";

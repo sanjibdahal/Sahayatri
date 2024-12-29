@@ -27,13 +27,16 @@ export interface RideRequest {
   requester_id: string;
   seats_needed: number;
   status: 'pending' | 'accepted' | 'rejected';
+  source: Location;
+  destination: Location;
+  departure_time: Date;
   created_at: Date;
 }
 
 export interface Location {
   latitude: number;
   longitude: number;
-  address: string;
+  address?: string | "Current Location";
 }
 
 export interface Message {
