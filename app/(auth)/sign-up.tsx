@@ -8,7 +8,7 @@ import InputField from "@/components/InputField";
 import { ReactNativeModal } from "react-native-modal";
 import { icons } from "@/constants";
 import { router } from "expo-router";
-
+import { supabase } from "@/utils/supabase"; // Import Supabase client
 
 export default function SignUp() {
   const [form, setForm] = useState({
@@ -24,15 +24,35 @@ export default function SignUp() {
     code: "",
   });
 
-  const submitForm = () => {
-    if (form.phonenumber === "" && form.name === "" && form.password === "") {
-        setVerification({
-          ...verification,
-          state: "pending",
-        });
+  const submitForm = async () => {
+    if (form.name === "" || form.phonenumber === "" || form.password === "") {
+      Alert.alert("Error", "All fields are required.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      // Call Supabase sign-up
+      const { data, error } = await supabase.auth.signUp({
+        phone: form.phonenumber,
+        password: form.password,
+        options: {
+          data: { name: form.name }, // Store additional data in user_metadata
+        },
+      });
+
+      if (error) {
+        Alert.alert("Sign-Up Error", error.message);
       } else {
-        Alert.alert("Error", "Invalid phone number, name, or password.");
-      }  
+        setVerification({ ...verification, state: "pending" });
+        Alert.alert("Success", "A verification link has been sent to your phone number.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const onPressVerify = () => {
@@ -51,8 +71,6 @@ export default function SignUp() {
       setShowSuccessModal(true);
     }
   };
-
-  
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
