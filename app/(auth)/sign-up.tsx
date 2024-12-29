@@ -2,13 +2,13 @@ import { View, Text, ImageBackground, ScrollView, Image, Alert } from "react-nat
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import Link from "expo-router/link";
+import { Link } from "expo-router";
 import Button from "@/components/Button";
 import InputField from "@/components/InputField";
 import { ReactNativeModal } from "react-native-modal";
 import { icons } from "@/constants";
 import { router } from "expo-router";
-import { supabase } from "@/utils/supabase"; // Import Supabase client
+import { supabase } from "@/lib/supabase"; // Import Supabase client
 
 export default function SignUp() {
   const [form, setForm] = useState({

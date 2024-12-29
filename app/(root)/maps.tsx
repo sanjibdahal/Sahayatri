@@ -5,6 +5,9 @@ import { Feather } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import { Locations } from './locations';
 import RouteMap from './RouteMap';
+import Loader from '@/components/Loader';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { router } from 'expo-router';
 
 export default function Maps() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -101,8 +104,8 @@ export default function Maps() {
 
   if (!region) {
     return (
-      <View style={styles.container}>
-        <Text>Loading map...</Text>
+      <View className='flex-1 justify-center items-center w-full h-full'>
+        <Loader isLoading={true}/>
       </View>
     );
   }
@@ -133,6 +136,10 @@ export default function Maps() {
         destination={destination}
       />
       
+      {/* <TouchableOpacity style={styles.menuButton} onPress={() => {router.push("/(root)/(tabs)/home")}}>
+        <Ionicons name="arrow-back" size={24} color="black" />
+      </TouchableOpacity> */}
+
       <View style={styles.locationBoxesContainer}>
         <View style={styles.locationBox}>
           <Text style={styles.locationBoxTitle}>Current Location</Text>
@@ -146,11 +153,8 @@ export default function Maps() {
         </View>
       </View>
 
-      {/*}
-      <TouchableOpacity style={styles.menuButton}>
-        <Feather name="menu" size={24} color="black" />
-      </TouchableOpacity>
-      */}
+      
+     
 
       <TouchableOpacity 
         style={styles.gpsButton} 
@@ -202,7 +206,7 @@ const styles = StyleSheet.create({
   },
   locationBoxesContainer: {
     position: 'absolute',
-    top: 50,
+    top: 60,
     left: 20,
     right: 20,
     flexDirection: 'row',
@@ -227,12 +231,12 @@ const styles = StyleSheet.create({
   },
   menuButton: {
     position: 'absolute',
-    top: 110,
+    top: 40,
     left: 20,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     padding: 10,
-    borderRadius: 30,
-    elevation: 5,
+    // borderRadius: 30,
+    // elevation: 5,
   },
   gpsButton: {
     position: 'absolute',

@@ -12,6 +12,7 @@ import {
 import { icons } from "../constants";
 import { useState } from "react";
 import { InputFieldProps } from "@/types/type";
+import { Feather } from "@expo/vector-icons";
 
 const InputField = ({
   title,
@@ -40,7 +41,7 @@ const InputField = ({
             className={`flex flex-row justify-start items-center relative rounded-xl border border-primary active:border-primary focus:border-primary  ${containerStyle}`}
           >
             {icon && (
-              <Image source={icon} className={`w-6 h-6 ml-4 ${iconStyle}`} />
+              <Feather name={icon} color={"gray"} size={20} className={`w-6 h-6 ml-4 ${iconStyle}`} />
             )}
             <TextInput
               className={`rounded-xl p-4 font-plusjakartasans_600semibold text-[15px] flex-1 ${inputStyle} text-left`}

@@ -1,7 +1,6 @@
 import { Tabs } from "expo-router";
 import { Image, ImageSourcePropType, View } from "react-native";
 
-import { icons } from "@/constants";
 import Feather from '@expo/vector-icons/Feather';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -14,20 +13,20 @@ export default function Layout() {
         tabBarActiveTintColor: '#57BE5E',
         tabBarInactiveTintColor: "gray",
         tabBarShowLabel: true,
-        tabBarStyle: {
-          backgroundColor: "#333333",
-          borderRadius: 50,
-          paddingBottom: 30, // ios only
-          overflow: "hidden",
-          marginHorizontal: 10,
-          marginBottom: 5,
-          height: 60,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-          position: "absolute",
-        },
+        // tabBarStyle: {
+        //   backgroundColor: "#333333",
+        //   borderRadius: 50,
+        //   paddingBottom: 30, // ios only
+        //   overflow: "hidden",
+        //   marginHorizontal: 10,
+        //   marginBottom: 5,
+        //   height: 60,
+        //   display: "flex",
+        //   justifyContent: "space-between",
+        //   alignItems: "center",
+        //   flexDirection: "row",
+        //   position: "absolute",
+        // },
       }}
     >
       <Tabs.Screen
