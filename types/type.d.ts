@@ -49,6 +49,7 @@ export interface Message {
 declare interface InputFieldProps extends TextInputProps {
   title: string;
   icon?: any;
+  imageIcon?: any;
   secureTextEntry?: boolean;
   labelStyle?: string;
   containerStyle?: string;

@@ -17,6 +17,7 @@ import { Feather } from "@expo/vector-icons";
 const InputField = ({
   title,
   icon,
+  imageIcon,
   secureTextEntry = false,
   labelStyle,
   containerStyle,
@@ -42,6 +43,9 @@ const InputField = ({
           >
             {icon && (
               <Feather name={icon} color={"gray"} size={20} className={`w-6 h-6 ml-4 ${iconStyle}`} />
+            )}
+            {imageIcon && (
+              <Image source={imageIcon} className={`w-6 h-6 ml-4 ${iconStyle}`} />
             )}
             <TextInput
               className={`rounded-xl p-4 font-plusjakartasans_600semibold text-[15px] flex-1 ${inputStyle} text-left`}
