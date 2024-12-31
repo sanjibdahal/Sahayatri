@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, ScrollView, Image, Alert } from "react-native";
+import { View, Text, ImageBackground, ScrollView, Image, Alert, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -8,7 +8,8 @@ import InputField from "@/components/InputField";
 import { ReactNativeModal } from "react-native-modal";
 import { icons } from "@/constants";
 import { router } from "expo-router";
-import { supabase } from "@/lib/supabase"; // Import Supabase client
+import { supabase } from "@/lib/supabase";
+// import * as ImagePicker from "expo-image-picker";
 
 export default function SignUp() {
   const [form, setForm] = useState({
@@ -17,12 +18,33 @@ export default function SignUp() {
     password: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  // const [image, setImage] = useState<string | null>(null);
   const [verification, setVerification] = useState({
     state: "default",
     error: "",
     code: "",
   });
+
+  // const pickImage = async () => {
+  //   const result = await ImagePicker.launchImageLibraryAsync({
+  //     allowsEditing: true,
+  //     quality: 1,
+  //   });
+  
+  //   if (!result.canceled && result.assets && result.assets.length > 0) {
+  //     setImage(result.assets[0].uri); // Access URI from assets array
+  //   } else {
+  //     console.log("Image selection canceled");
+  //   }
+  // };
+  
+
+  const formatPhoneNumber = (phoneNumber: string) => {
+    if (!phoneNumber.startsWith('+')) {
+      return `+977${phoneNumber}`;
+    }
+    return phoneNumber;
+  };
 
   const submitForm = async () => {
     if (form.name === "" || form.phonenumber === "" || form.password === "") {
@@ -30,12 +52,18 @@ export default function SignUp() {
       return;
     }
 
+    const formattedPhone = formatPhoneNumber(form.phonenumber);
+
     try {
       setIsSubmitting(true);
 
+      // let imageUrl = null;
+      // if (image) {
+      //   imageUrl = await uploadImage(image);
+      // }
       // Call Supabase sign-up
       const { data, error } = await supabase.auth.signUp({
-        phone: form.phonenumber,
+        phone: formattedPhone,
         password: form.password,
         options: {
           data: { name: form.name }, // Store additional data in user_metadata
@@ -55,22 +83,66 @@ export default function SignUp() {
     }
   };
 
-  const onPressVerify = () => {
-    if (verification.code === "") {
-      setVerification({
-        ...verification,
-        state: "success",
+  const onPressVerify = async () => {
+    const formattedPhone = formatPhoneNumber(form.phonenumber);
+
+    if (!verification.code) {
+      Alert.alert("Error", "Please enter the OTP.");
+      return;
+    }
+  
+    try {
+      // Verify the OTP using Supabase
+      const { data, error } = await supabase.auth.verifyOtp({
+        phone: formattedPhone,
+        token: verification.code,
+        type: 'sms',
       });
+  
+      if (error) {
+        setVerification({ ...verification, error: error.message, state: "failed" });
+        Alert.alert("Error", error.message || "Invalid OTP.");
+        return;
+      }
+  
+      setVerification({ ...verification, state: "success" });
       setShowSuccessModal(true);
-    } else {
-      setVerification({
-        ...verification,
-        error: "Invalid OTP. Please try again.",
-        state: "failed",
-      });
-      setShowSuccessModal(true);
+      Alert.alert("Success", "Your phone number has been verified.");
+    } catch (error) {
+      Alert.alert("Error", "Something went wrong. Please try again.");
     }
   };
+
+  // const uploadImage = async (uri: string) => {
+  //   try {
+  //     // Fetch the image file from the local URI
+  //     const response = await fetch(uri);
+  //     console.log("Image URI: ", uri)
+  //     const blob = await response.blob(); // Convert the image file into a Blob
+  //     console.log("Blob created")
+  
+  //     // Generate a unique filename using the current timestamp
+  //     const fileName = `photos/${Date.now()}.jpg`;
+  
+  //     // Upload the Blob to the Supabase 'photos' bucket
+  //     const { data, error } = await supabase.storage
+  //       .from("photos") // Reference the bucket named "photos"
+  //       .upload(fileName, blob, {
+  //         contentType: "image/jpeg", // Specify the content type
+  //       });
+  //       console.log("File uploaded")
+  //     if (error) {
+  //       throw new Error('Network request failed during image upload'); // Throw an error if the upload fails
+  //     }
+  
+  //     // Generate and return the public URL of the uploaded image
+  //     const publicUrl = supabase.storage.from("photos").getPublicUrl(fileName);
+  //     return publicUrl;
+  //   } catch (error: any) {
+  //     console.error("Image upload failed:", error.message || error); // Log the error
+  //     throw error; // Propagate the error to the calling function
+  //   }
+  // };
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -95,7 +167,13 @@ export default function SignUp() {
               Create Your Account
             </Text>
 
-            <Image source={icons.addimage} className="mt-10" />
+            {/* <TouchableOpacity onPress={pickImage}>
+              <Image
+                source={image ? { uri: image } : icons.addimage}
+                className="mt-10 w-24 h-24 rounded-full bg-gray-200"
+                style={{ resizeMode: "cover" }}
+              />
+            </TouchableOpacity> */}
 
             <InputField
               title="Name"
@@ -178,7 +256,7 @@ export default function SignUp() {
               </Text>
             )}
             <Button
-              title="Verify Email"
+              title="Verify Number"
               onPress={onPressVerify}
               className="mt-5 bg-success-500"
             />
