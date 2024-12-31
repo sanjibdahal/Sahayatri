@@ -15,6 +15,7 @@ export default function SignUp() {
   const [form, setForm] = useState({
     name: "",
     phonenumber: "",
+    email: "",
     password: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,22 +38,12 @@ export default function SignUp() {
   //     console.log("Image selection canceled");
   //   }
   // };
-  
-
-  const formatPhoneNumber = (phoneNumber: string) => {
-    if (!phoneNumber.startsWith('+')) {
-      return `+977${phoneNumber}`;
-    }
-    return phoneNumber;
-  };
 
   const submitForm = async () => {
-    if (form.name === "" || form.phonenumber === "" || form.password === "") {
+    if (form.name === "" || form.phonenumber === "" || form.email === "" || form.password === "") {
       Alert.alert("Error", "All fields are required.");
       return;
     }
-
-    const formattedPhone = formatPhoneNumber(form.phonenumber);
 
     try {
       setIsSubmitting(true);
@@ -63,10 +54,10 @@ export default function SignUp() {
       // }
       // Call Supabase sign-up
       const { data, error } = await supabase.auth.signUp({
-        phone: formattedPhone,
+        email: form.email,
         password: form.password,
         options: {
-          data: { name: form.name }, // Store additional data in user_metadata
+          data: { name: form.name, phone: form.phonenumber }, // Store additional data in user_metadata
         },
       });
 
@@ -84,7 +75,6 @@ export default function SignUp() {
   };
 
   const onPressVerify = async () => {
-    const formattedPhone = formatPhoneNumber(form.phonenumber);
 
     if (!verification.code) {
       Alert.alert("Error", "Please enter the OTP.");
@@ -94,9 +84,9 @@ export default function SignUp() {
     try {
       // Verify the OTP using Supabase
       const { data, error } = await supabase.auth.verifyOtp({
-        phone: formattedPhone,
+        email: form.email,
         token: verification.code,
-        type: 'sms',
+        type: 'email',
       });
   
       if (error) {
@@ -194,6 +184,16 @@ export default function SignUp() {
             />
 
             <InputField
+              title="Email"
+              placeholder="Enter email"
+              icon={icons.email}
+              textContentType="emailAddress"
+              keyboardType="email-address"
+              value={form.email}
+              onChangeText={(value) => setForm({ ...form, email: value })}
+            />
+
+            <InputField
               title="Password"
               placeholder="Enter password"
               icon={icons.lock}
@@ -238,7 +238,7 @@ export default function SignUp() {
               Verification
             </Text>
             <Text className="font-plusjakartasans_500medium mb-5">
-              We've sent a verification code to {form.phonenumber}.
+              We've sent a verification code to {form.email}.
             </Text>
             <InputField
               title={"Code"}
