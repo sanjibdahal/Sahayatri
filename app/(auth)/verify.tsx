@@ -10,7 +10,7 @@ export default function Verify() {
   const params = useLocalSearchParams();
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const email = "sanjibdahal@gmail.com";
   const handleVerify = async () => {
     try {
       setLoading(true);
@@ -45,7 +45,8 @@ export default function Verify() {
 
   return (
     <View className="flex-1 bg-white px-4 justify-center">
-      <Text className="text-3xl font-plusjakartasans_700bold mb-8">Verify Phone</Text>
+      <Text className="text-3xl font-plusjakartasans_700bold mb-1">Verify Email Address</Text>
+      <Text className="text-sm font-plusjakartasans_500medium mb-1">A verification code with OTP has been sent to {email}</Text>
       
       <InputField
         title="Verification Code"

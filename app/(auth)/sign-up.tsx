@@ -32,6 +32,7 @@ export default function SignUp() {
       Alert.alert("Error", "All fields are required.");
       return;
     }
+    router.push("/(auth)/verify" as any);
 
     // try {
     //   setIsSubmitting(true);
@@ -70,6 +71,7 @@ export default function SignUp() {
       //   type: "sms",
       // });
       // console.log("Data OTP is this: ", data);
+      
       if (verification.code === "") {
         setVerification({
           ...verification,
