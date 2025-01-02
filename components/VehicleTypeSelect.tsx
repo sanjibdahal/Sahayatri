@@ -15,7 +15,7 @@ export default function VehicleTypeSelect({ value, onChange }: Props) {
 
   return (
     <View className="mb-4">
-      <Text className="text-lg font-plusjakartasans mb-2">Vehicle Type</Text>
+      <Text className="text-lg font-plusjakartasans_600semibold mb-2 color-graysecondary">Vehicle Type</Text>
       <View className="flex-row">
         {options.map((option) => (
           <TouchableOpacity
