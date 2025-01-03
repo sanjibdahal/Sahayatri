@@ -12,11 +12,13 @@ import { supabase } from "@/lib/supabase";
 // import * as ImagePicker from "expo-image-picker";
 
 export default function SignUp() {
+
   const [form, setForm] = useState({
     name: "",
-    phonenumber: "",
     email: "",
+    phonenumber: "",
     password: "",
+    // photo_url: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   // const [image, setImage] = useState<string | null>(null);
@@ -44,9 +46,10 @@ export default function SignUp() {
       Alert.alert("Error", "All fields are required.");
       return;
     }
+    router.push("/(auth)/verify" as any);
 
-    try {
-      setIsSubmitting(true);
+    // try {
+    //   setIsSubmitting(true);
 
       // let imageUrl = null;
       // if (image) {
@@ -61,17 +64,18 @@ export default function SignUp() {
         },
       });
 
-      if (error) {
-        Alert.alert("Sign-Up Error", error.message);
-      } else {
-        setVerification({ ...verification, state: "pending" });
-        Alert.alert("Success", "A verification link has been sent to your phone number.");
-      }
-    } catch (error) {
-      Alert.alert("Error", "Something went wrong. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    //   if (error) {
+    //     Alert.alert("Sign-Up Error", error.message);
+    //   } else {
+    //     setVerification({ ...verification, state: "pending" });
+    //     console.log("Data is this: ", data);
+    //     Alert.alert("Success", "A verification link has been sent to your phone number.");
+    //   }
+    // } catch (error) {
+    //   Alert.alert("Error", "Something went wrong. Please try again.");
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
   };
 
   const onPressVerify = async () => {
@@ -168,15 +172,26 @@ export default function SignUp() {
             <InputField
               title="Name"
               placeholder="Enter name"
-              icon={icons.person}
+              imageIcon={icons.person}
+              
               value={form.name}
               onChangeText={(value) => setForm({ ...form, name: value })}
             />
 
             <InputField
+              title="Email Address"
+              placeholder="Enter email address"
+              textContentType="emailAddress"
+              keyboardType="email-address"
+              imageIcon={icons.email}
+              value={form.email}
+              onChangeText={(value) => setForm({ ...form, email: value })}
+            />
+
+            <InputField
               title="Phone No."
               placeholder="Enter phone number"
-              icon={icons.phone}
+              imageIcon={icons.phone}
               textContentType="telephoneNumber"
               keyboardType="phone-pad"
               value={form.phonenumber}
@@ -196,7 +211,7 @@ export default function SignUp() {
             <InputField
               title="Password"
               placeholder="Enter password"
-              icon={icons.lock}
+              imageIcon={icons.lock}
               secureTextEntry={true}
               textContentType="password"
               value={form.password}

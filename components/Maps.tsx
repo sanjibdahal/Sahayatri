@@ -10,6 +10,7 @@ type Props = {
 
 export default function Maps({ initialLocation, onLocationSelect, selectedLocation }: Props) {
   const { location } = useLocation();
+  console.log('Current Location: ', location);
 
   const defaultRegion = {
     latitude: initialLocation?.latitude || location?.coords.latitude || 27.7172,

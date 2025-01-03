@@ -10,6 +10,8 @@ interface ORSFeature {
     properties: {
         label: string;
         name: string;
+        county: string;
+        country: string;
     };
     geometry: {
         coordinates: [number, number];
@@ -29,19 +31,27 @@ type Props = {
 export default function LocationSearch({ onLocationSelect, placeholder, value }: Props) {
     const [query, setQuery] = useState('');
     const [predictions, setPredictions] = useState<ORSFeature[]>([]);
+    const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+
 
     useEffect(() => {
-        if (query.length > 2) {
+        if (!selectedLocation && query.length > 3) {
             searchLocations();
         } else {
             setPredictions([]);
         }
-    }, [query]);
+    }, [query, selectedLocation]);
+
+    // const handleClearLocation = () => {
+    //     setSelectedLocation(null);
+    //     setQuery('');
+    // };
+
 
     const searchLocations = async () => {
         try {
             const response = await fetch(
-                `https://api.openrouteservice.org/geocode/search?api_key=${ORS_API_KEY}&text=${encodeURIComponent(query)}`,
+                `https://api.openrouteservice.org/geocode/search?api_key=${ORS_API_KEY}&text=${encodeURIComponent(query)}&boundary.country=NP`,
                 {
                     headers: {
                         'Accept': 'application/json',
@@ -65,12 +75,25 @@ export default function LocationSearch({ onLocationSelect, placeholder, value }:
                     icon={"search"}
                     title='Destination'
                     placeholder={placeholder || "Search location"}
-                    value={query}
-                    onChangeText={setQuery}
+                    value={selectedLocation || query}
+                    onChangeText={(text) => {
+                        if (selectedLocation) {
+                            setSelectedLocation(null);
+                        }
+                        setQuery(text);
+                    }}
                 />
+                {/* {selectedLocation && (
+                    <TouchableOpacity
+                        onPress={handleClearLocation}
+                        className="absolute right-2 top-16"
+                    >
+                        <Text className="text-2xl">×</Text>
+                    </TouchableOpacity>
+                )} */}
             </View>
 
-            {predictions.length > 0 && (
+            {!selectedLocation && predictions.length > 0 && (
                 <FlatList
                     data={predictions}
                     keyExtractor={(item, index) => index.toString()}
@@ -78,28 +101,30 @@ export default function LocationSearch({ onLocationSelect, placeholder, value }:
                         backgroundColor: '#f2f2f2',
                         borderRadius: 8,
                         marginTop: 8,
-                      }}
+                    }}
                     scrollEnabled={true}
                     nestedScrollEnabled={true}
                     keyboardShouldPersistTaps="handled"
                     renderItem={({ item }) => (
                         <TouchableOpacity
-                        style={{
-                            padding: 12,
-                            borderBottomWidth: 1,
-                            borderBottomColor: '#ffffff'
-                          }}
+                            style={{
+                                padding: 12,
+                                borderBottomWidth: 1,
+                                borderBottomColor: '#ffffff'
+                            }}
                             onPress={() => {
+                                const locationText = `${item.properties.name}, ${item.properties.county}, ${item.properties.country}`;
                                 onLocationSelect({
                                     latitude: item.geometry.coordinates[1],
                                     longitude: item.geometry.coordinates[0],
-                                    address: item.properties.name
+                                    address: item.properties.label
                                 });
-                                setQuery(item.properties.name);
+                                setSelectedLocation(locationText);
+                                setQuery(locationText);
                                 setPredictions([]);
                             }}
                         >
-                            <Text className="font-plusjakartasans">{item.properties.label}</Text>
+                            <Text className="font-plusjakartasans">{item.properties.name}, {item.properties.county}, {item.properties.country}</Text>
                         </TouchableOpacity>
                     )}
                 />

@@ -13,10 +13,12 @@ import InputField from "@/components/InputField";
 import { icons } from "@/constants";
 
 export default function SignIn() {
+
   const [form, setForm] = useState({
-    phonenumber: "",
+    email: "",
     password: "",
   });
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submitForm = () => {};
@@ -42,19 +44,19 @@ export default function SignIn() {
             </Text>
 
             <InputField
-              title="Phone No."
-              placeholder="Enter phone number"
-              icon={icons.phone}
-              textContentType="telephoneNumber"
-              keyboardType="phone-pad"
-              value={form.phonenumber}
-              onChangeText={(value) => setForm({ ...form, phonenumber: value })}
+              title="Email Address"
+              placeholder="Enter email address"
+              imageIcon={icons.email}
+              textContentType="emailAddress"
+              keyboardType="email-address"
+              value={form.email}
+              onChangeText={(value) => setForm({ ...form, email: value })}
             />
 
             <InputField
               title="Password"
               placeholder="Enter password"
-              icon={icons.lock}
+              imageIcon={icons.lock}
               secureTextEntry={true}
               textContentType="password"
               value={form.password}
