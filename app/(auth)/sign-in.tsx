@@ -1,16 +1,12 @@
-import {
-  View,
-  Text,
-  ImageBackground,
-  ScrollView,
-} from "react-native";
+import { View, Text, ImageBackground, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import {Link} from "expo-router";
+import { Link, router } from "expo-router";
 import Button from "@/components/Button";
 import InputField from "@/components/InputField";
 import { icons } from "@/constants";
+import { supabase } from "@/lib/supabase";
 
 export default function SignIn() {
 
@@ -18,10 +14,38 @@ export default function SignIn() {
     email: "",
     password: "",
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitForm = () => {};
+  const submitForm = async () => {
+    if (form.email === "" || form.password === "") {
+      Alert.alert("Error", "All fields are required.");
+      return;
+    }
+    try {
+      setIsSubmitting(true);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: form.email,
+        password: form.password
+      });
+
+      if (error) {
+        console.error("Error signing in:", error);
+        Alert.alert(`Error: ${error.message}`);
+        return;
+      }
+      if (data.session) {
+        router.replace('/(root)/home');
+        console.log("User signed in successfully: ", data);
+      }
+    } catch (error) {
+      console.error("Error signing in:", error);
+      Alert.alert("Error", "Failed to sign in. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+
+  };
 
   return (
     <SafeAreaView className="h-full bg-white">
@@ -66,7 +90,7 @@ export default function SignIn() {
 
             <Button
               title="Sign In"
-              onPress={() => submitForm}
+              onPress={() => submitForm()}
               containerStyles="mt-7"
               isLoading={isSubmitting}
             />

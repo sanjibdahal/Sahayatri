@@ -11,8 +11,8 @@ export interface User {
 export interface Ride {
   id: string;
   rider_id: string;
-  source: Location;
-  destination: Location;
+  source_location: Location;
+  destination_location: Location;
   departure_time: Date;
   vehicle_type: 'car' | 'bike' | 'scooter';
   seats_available: number;

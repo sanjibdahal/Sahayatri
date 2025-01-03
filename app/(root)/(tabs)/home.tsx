@@ -6,12 +6,17 @@ import Button from "@/components/Button";
 import Octicons from "@expo/vector-icons/Octicons";
 import "@/global.css";
 import { router } from "expo-router";
-import Feather from "@expo/vector-icons/Feather";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/context/AuthProvider";
 
 
 const Home = () => {
 
-  const handleSignOut = () => {};
+  const { user, session } = useAuth();
+
+  const handleSignOut = () => {
+    supabase.auth.signOut();
+  };
 
   const RequestaRide = () => {
     router.push("/(root)/request-ride" as any);
@@ -25,7 +30,7 @@ const Home = () => {
       <View className="flex-1 flex justify-around items-center w-full px-4">
         <View className="flex items-center flex-row justify-between w-full mb-10">
           <Text className="text-2xl font-plusjakartasans_500medium">
-            Welcome,{"\n"}Sanjib Dahal
+            Welcome,{"\n"}{user?.user_metadata.name}
           </Text>
 
           <TouchableOpacity

@@ -3,6 +3,7 @@ import { View, Text, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Button from '@/components/Button';
 import InputField from '@/components/InputField';
+import { supabase } from '@/lib/supabase';
 
 export default function Verify() {
   // const { verifyCode } = useAuth();
@@ -10,10 +11,21 @@ export default function Verify() {
   const params = useLocalSearchParams();
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
-  const email = "sanjibdahal@gmail.com";
+  const email = params.email as string;
+
   const handleVerify = async () => {
     try {
       setLoading(true);
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.verifyOtp({
+        email,
+        token: code,
+        type: 'email',
+      })
+      
+      
       // await verifyCode(code);
       
       // if (params.photo) {
@@ -34,7 +46,12 @@ export default function Verify() {
       //   });
       // }
       
-      router.replace('/(root)/(tabs)/home');
+      if (error) {
+        Alert.alert('Error', 'Invalid verification code');
+        console.error(error);
+      } else {
+        router.replace('/(root)/(tabs)/home');
+      }
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'Invalid verification code');

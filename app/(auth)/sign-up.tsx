@@ -8,7 +8,7 @@ import InputField from "@/components/InputField";
 import { ReactNativeModal } from "react-native-modal";
 import { icons } from "@/constants";
 import { router } from "expo-router";
-// import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 export default function SignUp() {
 
@@ -21,79 +21,67 @@ export default function SignUp() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [verification, setVerification] = useState({
-    state: "default",
-    error: "",
-    code: "",
-  });
-
   const submitForm = async () => {
-    if (form.name === "" || form.phonenumber === "" || form.password === "") {
+    if (form.name === "" || form.email === "" || form.phonenumber === "" || form.password === "") {
       Alert.alert("Error", "All fields are required.");
       return;
     }
-    router.push("/(auth)/verify" as any);
 
-    // try {
-    //   setIsSubmitting(true);
-
-    //   // Call Supabase sign-up
-    //   const { data, error } = await supabase.auth.signUp({
-    //     phone: `+977${form.phonenumber}`,
-    //     password: form.password,
-    //     options: {
-    //       data: { name: form.name }, // Store additional data in user_metadata
-    //       channel: "sms",
-    //     },
-    //   });
-
-    //   if (error) {
-    //     Alert.alert("Sign-Up Error", error.message);
-    //   } else {
-    //     setVerification({ ...verification, state: "pending" });
-    //     console.log("Data is this: ", data);
-    //     Alert.alert("Success", "A verification link has been sent to your phone number.");
-    //   }
-    // } catch (error) {
-    //   Alert.alert("Error", "Something went wrong. Please try again.");
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
-  };
-
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-
-  const onPressVerify = async () => {
     try {
-      // const { data, error } = await supabase.auth.verifyOtp({
-      //   phone: `+977${form.phonenumber}`,
-      //   token: verification.code,
-      //   type: "sms",
-      // });
-      // console.log("Data OTP is this: ", data);
-      
-      if (verification.code === "") {
-        setVerification({
-          ...verification,
-          state: "success",
-        });
-        setShowSuccessModal(true);
+      setIsSubmitting(true);
+
+      // Call Supabase sign-up
+      const { data, error } = await supabase.auth.signUp({
+        email: form.email,
+        password: form.password,
+        options: {data: {name: form.name, phone: form.phonenumber}}
+      });
+
+      if (error) {
+        Alert.alert("Sign-Up Error", error.message);
       } else {
-        setVerification({
-          ...verification,
-          error: "Invalid OTP. Please try again.",
-          state: "failed",
-        });
-        setShowSuccessModal(true);
+        // Alert.alert("Success", "A verification link has been sent to your phone number.");
+        router.push({pathname: "/(auth)/verify", params: {email: form.email}});
       }
     } catch (error) {
-      setVerification({
-        ...verification,
-        error: "Invalid OTP. Please try again.",
-        state: "failed",
-      });
+      Alert.alert("Error", "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  // const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // const onPressVerify = async () => {
+  //   try {
+  //     const { data, error } = await supabase.auth.verifyOtp({
+  //       email: form.email,
+  //       token: verification.code,
+  //     })
+  //     // console.log("Data OTP is this: ", data);
+      
+  //     // if (verification.code === "") {
+  //     //   setVerification({
+  //     //     ...verification,
+  //     //     state: "success",
+  //     //   });
+  //     //   setShowSuccessModal(true);
+  //     // } else {
+  //     //   setVerification({
+  //     //     ...verification,
+  //     //     error: "Invalid OTP. Please try again.",
+  //     //     state: "failed",
+  //     //   });
+  //       // setShowSuccessModal(true);
+  //     }
+  //   } catch (error) {
+  //     // setVerification({
+  //     //   ...verification,
+  //     //   error: "Invalid OTP. Please try again.",
+  //     //   state: "failed",
+  //     // });
+  //   }
+  // };
 
 
 
@@ -177,7 +165,7 @@ export default function SignUp() {
               </Link>
             </View>
           </View>
-          <ReactNativeModal
+          {/* <ReactNativeModal
             isVisible={verification.state === "pending"}
             // onBackdropPress={() =>
             //   setVerification({ ...verification, state: "default" })
@@ -235,7 +223,7 @@ export default function SignUp() {
                 className="mt-5"
               />
             </View>
-          </ReactNativeModal>
+          </ReactNativeModal> */}
         </View>
       </ScrollView>
     </SafeAreaView>
