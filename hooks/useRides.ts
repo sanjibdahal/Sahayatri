@@ -82,8 +82,8 @@ export const supabase = {
                                     vehicle_type: 'Car',
                                     vehicle_plate: 'ABC123',
                                     seats_available: 3,
-                                    source_location: 'Location A',
-                                    destination_location: 'Location B',
+                                    source_location: {address: "Cafeteria, Nepal", latitude: 27.6217536, longitude: 85.5371502},
+                                    destination_location: {address: 'Kathmandu University, Dhulikhel, Nepal', latitude: 27.617999, longitude: 85.5371502},
                                     departure_time: new Date().toISOString(),
                                     status: 'active',
                                     created_at: new Date().toISOString()

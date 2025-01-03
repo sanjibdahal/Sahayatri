@@ -19,6 +19,12 @@ export function useLocation() {
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
 
+      // let address = await Location.reverseGeocodeAsync({
+      //   latitude: location.coords.latitude,
+      //   longitude: location.coords.longitude
+      // });
+      // console.log('Address: ', address);
+
       if (location) {
         const { latitude, longitude } = location.coords;
         try {

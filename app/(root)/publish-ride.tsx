@@ -12,6 +12,7 @@ import { useLocation } from '@/hooks/useLocation';
 import LocationSearch from '@/components/LocationSearch';
 import Button from '@/components/Button';
 import {format, parse} from 'date-fns';
+import { icons } from '@/constants';
 
 export default function PublishRide() {
   const router = useRouter();
@@ -123,7 +124,7 @@ export default function PublishRide() {
 
       <InputField
         title="Source Location"
-        icon="crosshair"
+        imageIcon={icons.target}
         value={form.sourceLocation?.address || 'Current Location'}
         editable={false}
       />
@@ -166,7 +167,6 @@ export default function PublishRide() {
         data={[1]}
         renderItem={() => renderContent()}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ padding: 16 }}
       />
     </SafeAreaView>
   );
