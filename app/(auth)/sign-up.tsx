@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, ScrollView, Image, Alert } from "react-native";
+import { View, Text, ImageBackground, ScrollView, Image, Alert, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -12,6 +12,7 @@ import { supabase } from "@/lib/supabase";
 
 export default function SignUp() {
 
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -20,6 +21,50 @@ export default function SignUp() {
     // photo_url: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // const pickImage = async () => {
+  //   const result = await ImagePicker.launchImageLibraryAsync({
+  //     allowsEditing: true,
+  //     quality: 1,
+  //   });
+  
+  //   if (!result.canceled && result.assets && result.assets.length > 0) {
+  //     setImage(result.assets[0].uri); // Access URI from assets array
+  //   } else {
+  //     console.log("Image selection canceled");
+  //   }
+  // };
+
+   // const uploadImage = async (uri: string) => {
+  //   try {
+  //     // Fetch the image file from the local URI
+  //     const response = await fetch(uri);
+  //     console.log("Image URI: ", uri)
+  //     const blob = await response.blob(); // Convert the image file into a Blob
+  //     console.log("Blob created")
+  
+  //     // Generate a unique filename using the current timestamp
+  //     const fileName = `photos/${Date.now()}.jpg`;
+  
+  //     // Upload the Blob to the Supabase 'photos' bucket
+  //     const { data, error } = await supabase.storage
+  //       .from("photos") // Reference the bucket named "photos"
+  //       .upload(fileName, blob, {
+  //         contentType: "image/jpeg", // Specify the content type
+  //       });
+  //       console.log("File uploaded")
+  //     if (error) {
+  //       throw new Error('Network request failed during image upload'); // Throw an error if the upload fails
+  //     }
+  
+  //     // Generate and return the public URL of the uploaded image
+  //     const publicUrl = supabase.storage.from("photos").getPublicUrl(fileName);
+  //     return publicUrl;
+  //   } catch (error: any) {
+  //     console.error("Image upload failed:", error.message || error); // Log the error
+  //     throw error; // Propagate the error to the calling function
+  //   }
+  // };
 
   const submitForm = async () => {
     if (form.name === "" || form.email === "" || form.phonenumber === "" || form.password === "") {
@@ -50,40 +95,6 @@ export default function SignUp() {
     }
   };
 
-  // const [showSuccessModal, setShowSuccessModal] = useState(false);
-
-  // const onPressVerify = async () => {
-  //   try {
-  //     const { data, error } = await supabase.auth.verifyOtp({
-  //       email: form.email,
-  //       token: verification.code,
-  //     })
-  //     // console.log("Data OTP is this: ", data);
-      
-  //     // if (verification.code === "") {
-  //     //   setVerification({
-  //     //     ...verification,
-  //     //     state: "success",
-  //     //   });
-  //     //   setShowSuccessModal(true);
-  //     // } else {
-  //     //   setVerification({
-  //     //     ...verification,
-  //     //     error: "Invalid OTP. Please try again.",
-  //     //     state: "failed",
-  //     //   });
-  //       // setShowSuccessModal(true);
-  //     }
-  //   } catch (error) {
-  //     // setVerification({
-  //     //   ...verification,
-  //     //   error: "Invalid OTP. Please try again.",
-  //     //   state: "failed",
-  //     // });
-  //   }
-  // };
-
-
 
   return (
     <SafeAreaView className="h-full bg-white">
@@ -105,7 +116,13 @@ export default function SignUp() {
               Create Your Account
             </Text>
 
-            <Image source={icons.addimage} className="mt-10" />
+            <TouchableOpacity onPress={pickImage}>
+              <Image
+                source={image ? { uri: image } : icons.addimage}
+                className="mt-10 w-24 h-24 rounded-full bg-gray-200"
+                style={{ resizeMode: "cover" }}
+              />
+            </TouchableOpacity>
 
             <InputField
               title="Name"
@@ -137,6 +154,16 @@ export default function SignUp() {
             />
 
             <InputField
+              title="Email"
+              placeholder="Enter email"
+              icon={icons.email}
+              textContentType="emailAddress"
+              keyboardType="email-address"
+              value={form.email}
+              onChangeText={(value) => setForm({ ...form, email: value })}
+            />
+
+            <InputField
               title="Password"
               placeholder="Enter password"
               imageIcon={icons.lock}
@@ -165,65 +192,7 @@ export default function SignUp() {
               </Link>
             </View>
           </View>
-          {/* <ReactNativeModal
-            isVisible={verification.state === "pending"}
-            // onBackdropPress={() =>
-            //   setVerification({ ...verification, state: "default" })
-            // }
-            onModalHide={() => {
-              if (verification.state === "success") {
-                setShowSuccessModal(true);
-              }
-            }}
-          >
-            <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-              <Text className="font-plusjakartasans_700bold text-2xl mb-2">
-                Verification
-              </Text>
-              <Text className="font-plusjakartasans_500medium mb-5">
-                We've sent a verification code to {form.phonenumber}.
-              </Text>
-              <InputField
-                title={"Code"}
-                imageIcon={icons.lock}
-                placeholder={"12345"}
-                value={verification.code}
-                keyboardType="numeric"
-                onChangeText={(code) =>
-                  setVerification({ ...verification, code })
-                }
-              />
-              {verification.error && (
-                <Text className="text-red-500 text-sm mt-1">
-                  {verification.error}
-                </Text>
-              )}
-              <Button
-                title="Verify Email"
-                onPress={onPressVerify}
-                className="mt-5 bg-success-500"
-              />
-            </View>
-          </ReactNativeModal>
-          <ReactNativeModal isVisible={showSuccessModal}>
-            <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-              <Image
-                source={icons.checkmark}
-                className="w-[110px] h-[110px] mx-auto my-5 bg-primary rounded-full p-3"
-              />
-              <Text className="text-3xl font-plusjakartasans_700bold text-center">
-                Verified
-              </Text>
-              <Text className="text-base text-gray-400 font-plusjakartasans_700bold text-center mt-2">
-                You have successfully verified your account.
-              </Text>
-              <Button
-                title="Browse Home"
-                onPress={() => router.push('/(root)/(tabs)/home' as any)}
-                className="mt-5"
-              />
-            </View>
-          </ReactNativeModal> */}
+         
         </View>
       </ScrollView>
     </SafeAreaView>
