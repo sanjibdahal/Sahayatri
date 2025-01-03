@@ -13,6 +13,7 @@ import { supabase } from "@/lib/supabase";
 
 export default function SignUp() {
 
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -48,8 +49,8 @@ export default function SignUp() {
     }
     router.push("/(auth)/verify" as any);
 
-    // try {
-    //   setIsSubmitting(true);
+    try {
+      setIsSubmitting(true);
 
       // let imageUrl = null;
       // if (image) {
@@ -64,18 +65,18 @@ export default function SignUp() {
         },
       });
 
-    //   if (error) {
-    //     Alert.alert("Sign-Up Error", error.message);
-    //   } else {
-    //     setVerification({ ...verification, state: "pending" });
-    //     console.log("Data is this: ", data);
-    //     Alert.alert("Success", "A verification link has been sent to your phone number.");
-    //   }
-    // } catch (error) {
-    //   Alert.alert("Error", "Something went wrong. Please try again.");
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
+      if (error) {
+        Alert.alert("Sign-Up Error", error.message);
+      } else {
+        setVerification({ ...verification, state: "pending" });
+        console.log("Data is this: ", data);
+        Alert.alert("Success", "A verification link has been sent to your phone number.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const onPressVerify = async () => {
@@ -238,64 +239,64 @@ export default function SignUp() {
             </View>
           </View>
           <ReactNativeModal
-          isVisible={verification.state === "pending"}
-          // onBackdropPress={() =>
-          //   setVerification({ ...verification, state: "default" })
-          // }
-          onModalHide={() => {
-            if (verification.state === "success") {
-              setShowSuccessModal(true);
-            }
-          }}
-        >
-          <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-            <Text className="font-plusjakartasans_700bold text-2xl mb-2">
-              Verification
-            </Text>
-            <Text className="font-plusjakartasans_500medium mb-5">
-              We've sent a verification code to {form.email}.
-            </Text>
-            <InputField
-              title={"Code"}
-              icon={icons.lock}
-              placeholder={"12345"}
-              value={verification.code}
-              keyboardType="numeric"
-              onChangeText={(code) =>
-                setVerification({ ...verification, code })
+            isVisible={verification.state === "pending"}
+            // onBackdropPress={() =>
+            //   setVerification({ ...verification, state: "default" })
+            // }
+            onModalHide={() => {
+              if (verification.state === "success") {
+                setShowSuccessModal(true);
               }
-            />
-            {verification.error && (
-              <Text className="text-red-500 text-sm mt-1">
-                {verification.error}
+            }}
+          >
+            <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
+              <Text className="font-plusjakartasans_700bold text-2xl mb-2">
+                Verification
               </Text>
-            )}
-            <Button
-              title="Verify Number"
-              onPress={onPressVerify}
-              className="mt-5 bg-success-500"
-            />
-          </View>
-        </ReactNativeModal>
-        <ReactNativeModal isVisible={showSuccessModal}>
-          <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
-            <Image
-              source={icons.checkmark}
-              className="w-[110px] h-[110px] mx-auto my-5 bg-primary rounded-full p-3"
-            />
-            <Text className="text-3xl font-plusjakartasans_700bold text-center">
-              Verified
-            </Text>
-            <Text className="text-base text-gray-400 font-plusjakartasans_700bold text-center mt-2">
-              You have successfully verified your account.
-            </Text>
-            <Button
-              title="Browse Home"
-              onPress={() => router.push('/(root)/(tabs)/home' as any)}
-              className="mt-5"
-            />
-          </View>
-        </ReactNativeModal>
+              <Text className="font-plusjakartasans_500medium mb-5">
+                We've sent a verification code to {form.phonenumber}.
+              </Text>
+              <InputField
+                title={"Code"}
+                imageIcon={icons.lock}
+                placeholder={"12345"}
+                value={verification.code}
+                keyboardType="numeric"
+                onChangeText={(code) =>
+                  setVerification({ ...verification, code })
+                }
+              />
+              {verification.error && (
+                <Text className="text-red-500 text-sm mt-1">
+                  {verification.error}
+                </Text>
+              )}
+              <Button
+                title="Verify Email"
+                onPress={onPressVerify}
+                className="mt-5 bg-success-500"
+              />
+            </View>
+          </ReactNativeModal>
+          <ReactNativeModal isVisible={showSuccessModal}>
+            <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
+              <Image
+                source={icons.checkmark}
+                className="w-[110px] h-[110px] mx-auto my-5 bg-primary rounded-full p-3"
+              />
+              <Text className="text-3xl font-plusjakartasans_700bold text-center">
+                Verified
+              </Text>
+              <Text className="text-base text-gray-400 font-plusjakartasans_700bold text-center mt-2">
+                You have successfully verified your account.
+              </Text>
+              <Button
+                title="Browse Home"
+                onPress={() => router.push('/(root)/(tabs)/home' as any)}
+                className="mt-5"
+              />
+            </View>
+          </ReactNativeModal>
         </View>
       </ScrollView>
     </SafeAreaView>
