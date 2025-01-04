@@ -5,10 +5,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Link } from "expo-router";
 import Button from "@/components/Button";
 import InputField from "@/components/InputField";
-import { ReactNativeModal } from "react-native-modal";
 import { icons } from "@/constants";
 import { router } from "expo-router";
 import { supabase } from "@/lib/supabase";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+import { decode } from "base64-arraybuffer";
 
 export default function SignUp() {
 
@@ -21,53 +23,50 @@ export default function SignUp() {
     // photo_url: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
 
-  // const pickImage = async () => {
-  //   const result = await ImagePicker.launchImageLibraryAsync({
-  //     allowsEditing: true,
-  //     quality: 1,
-  //   });
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      quality: 1,
+      aspect: [1, 1],
+    });
   
-  //   if (!result.canceled && result.assets && result.assets.length > 0) {
-  //     setImage(result.assets[0].uri); // Access URI from assets array
-  //   } else {
-  //     console.log("Image selection canceled");
-  //   }
-  // };
+    if (!result.canceled) {
+      setImage(result.assets[0].uri); // Access URI from assets array
+      console.log("Image selected: ", result.assets[0].uri);
+    } else {
+      console.log("Image selection canceled");
+    }
+  };
 
-   // const uploadImage = async (uri: string) => {
-  //   try {
-  //     // Fetch the image file from the local URI
-  //     const response = await fetch(uri);
-  //     console.log("Image URI: ", uri)
-  //     const blob = await response.blob(); // Convert the image file into a Blob
-  //     console.log("Blob created")
+   const uploadImage = async (uri: string) => {
+    try {
+      const base64 = await FileSystem.readAsStringAsync(uri, { encoding: 'base64' });
+      const fileName = `img_${Date.now()}`;
   
-  //     // Generate a unique filename using the current timestamp
-  //     const fileName = `photos/${Date.now()}.jpg`;
+      const { data, error } = await supabase.storage
+        .from('photos')
+        .upload(fileName, decode(base64), {
+          contentType: "image/jpeg",
+        });
+        console.log("File uploaded")
+      if (error) {
+        throw new Error(`Network request failed during image upload. ${error}`); // Throw an error if the upload fails
+      }
   
-  //     // Upload the Blob to the Supabase 'photos' bucket
-  //     const { data, error } = await supabase.storage
-  //       .from("photos") // Reference the bucket named "photos"
-  //       .upload(fileName, blob, {
-  //         contentType: "image/jpeg", // Specify the content type
-  //       });
-  //       console.log("File uploaded")
-  //     if (error) {
-  //       throw new Error('Network request failed during image upload'); // Throw an error if the upload fails
-  //     }
-  
-  //     // Generate and return the public URL of the uploaded image
-  //     const publicUrl = supabase.storage.from("photos").getPublicUrl(fileName);
-  //     return publicUrl;
-  //   } catch (error: any) {
-  //     console.error("Image upload failed:", error.message || error); // Log the error
-  //     throw error; // Propagate the error to the calling function
-  //   }
-  // };
+      // Generate and return the public URL of the uploaded image
+      const publicUrl = supabase.storage.from("photos").getPublicUrl(fileName);
+      return publicUrl.data.publicUrl;
+    } catch (error: any) {
+      console.error("Image upload failed:", error.message || error);
+      throw error;
+    }
+  };
 
   const submitForm = async () => {
-    if (form.name === "" || form.email === "" || form.phonenumber === "" || form.password === "") {
+    if (form.name === "" || form.email === "" || form.phonenumber === "" || form.password === "" || image === null) {
       Alert.alert("Error", "All fields are required.");
       return;
     }
@@ -75,17 +74,26 @@ export default function SignUp() {
     try {
       setIsSubmitting(true);
 
+      const photo_url = await uploadImage(image);
+      console.log("Photo URL: ", photo_url);
+
       // Call Supabase sign-up
       const { data, error } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
-        options: {data: {name: form.name, phone: form.phonenumber}}
+        options: {
+          data: {
+            name: form.name, 
+            phone_number: form.phonenumber,
+            photo_url: photo_url,
+          }
+        }
       });
 
       if (error) {
         Alert.alert("Sign-Up Error", error.message);
       } else {
-        // Alert.alert("Success", "A verification link has been sent to your phone number.");
+        
         router.push({pathname: "/(auth)/verify", params: {email: form.email}});
       }
     } catch (error) {
@@ -116,10 +124,10 @@ export default function SignUp() {
               Create Your Account
             </Text>
 
-            <TouchableOpacity onPress={pickImage}>
+            <TouchableOpacity onPress={() => pickImage()} className="w-24 h-24 rounded-full">
               <Image
                 source={image ? { uri: image } : icons.addimage}
-                className="mt-10 w-24 h-24 rounded-full bg-gray-200"
+                className="w-24 h-24 rounded-full border-primary border-2 bg-gray-200"
                 style={{ resizeMode: "cover" }}
               />
             </TouchableOpacity>
@@ -151,16 +159,6 @@ export default function SignUp() {
               keyboardType="phone-pad"
               value={form.phonenumber}
               onChangeText={(value) => setForm({ ...form, phonenumber: value })}
-            />
-
-            <InputField
-              title="Email"
-              placeholder="Enter email"
-              icon={icons.email}
-              textContentType="emailAddress"
-              keyboardType="email-address"
-              value={form.email}
-              onChangeText={(value) => setForm({ ...form, email: value })}
             />
 
             <InputField

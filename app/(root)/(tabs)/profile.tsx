@@ -1,14 +1,16 @@
-// import { useUser } from "@clerk/clerk-expo";
+// import { useUsers } from "@clerk/clerk-expo";
 import { Image, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import InputField from "@/components/InputField";
 import React from "react";
+import { useAuth } from "@/context/AuthProvider";
 
 const Profile = () => {
   // const { user } = useUser();
-  const user = {
+  const { user } = useAuth();
+  const users = {
     name: "Sanjib Dahal",
     primaryEmailAddress: {
       emailAddress: "sanjibdahal@gmail.com",
@@ -36,7 +38,7 @@ const Profile = () => {
         <View className="flex items-center justify-center my-5">
           <Image
             source={{
-              uri: user?.imageUrl,
+              uri: user?.user_metadata.photo_url,
             }}
             style={{ width: 110, height: 110, borderRadius: 110 / 2 }}
             className=" rounded-full h-[110px] w-[110px] border-[3px] border-white shadow-sm shadow-neutral-300"
@@ -47,7 +49,7 @@ const Profile = () => {
           <View className="flex flex-col items-start justify-start w-full">
             <InputField
               title="Name"
-              placeholder={user?.name || "Not Found"}
+              placeholder={user?.user_metadata.name || "Not Found"}
               containerStyle="w-full"
               inputStyle="p-3.5"
               editable={false}
@@ -56,7 +58,7 @@ const Profile = () => {
             <InputField
               title="Email"
               placeholder={
-                user?.primaryEmailAddress?.emailAddress || "Not Found"
+                user?.email || "Not Found"
               }
               containerStyle="w-full"
               inputStyle="p-3.5"
@@ -65,7 +67,7 @@ const Profile = () => {
 
             <InputField
               title="Phone"
-              placeholder={user?.primaryPhoneNumber?.phoneNumber || "Not Found"}
+              placeholder={user?.user_metadata.phone_number || "Not Found"}
               containerStyle="w-full"
               inputStyle="p-3.5"
               editable={false}
@@ -75,7 +77,7 @@ const Profile = () => {
               Verification Status
             </Text>
             <View className="flex flex-row items-center justify-start w-full ">
-              {user.verified ? (
+              {user?.user_metadata.email_verified ? (
                 <>
                   <FontAwesome5 name="check-circle" size={18} color="#57BE5E" />
                   <Text className="text-xl color-primary font-plusjakartasans_600semibold ml-3">
