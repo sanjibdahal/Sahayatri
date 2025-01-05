@@ -13,10 +13,10 @@ export interface Ride {
   rider_id: string;
   source_location: Location;
   destination_location: Location;
-  departure_time: Date;
-  vehicle_type: 'car' | 'bike' | 'scooter';
-  seats_available: number;
-  vehicle_number: string;
+  departure_time: string;
+  vehicle_type: 'car' | 'bike';
+  no_of_seats_available: number;
+  number_plate: string;
   status: 'active' | 'completed' | 'cancelled';
   created_at: Date;
 }

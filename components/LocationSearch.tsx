@@ -117,7 +117,7 @@ export default function LocationSearch({ onLocationSelect, placeholder, value }:
                                 onLocationSelect({
                                     latitude: item.geometry.coordinates[1],
                                     longitude: item.geometry.coordinates[0],
-                                    address: item.properties.label
+                                    address: locationText
                                 });
                                 setSelectedLocation(locationText);
                                 setQuery(locationText);

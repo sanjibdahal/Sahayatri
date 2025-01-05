@@ -8,22 +8,7 @@ import React from "react";
 import { useAuth } from "@/context/AuthProvider";
 
 const Profile = () => {
-  // const { user } = useUser();
   const { user } = useAuth();
-  const users = {
-    name: "Sanjib Dahal",
-    primaryEmailAddress: {
-      emailAddress: "sanjibdahal@gmail.com",
-    },
-    primaryPhoneNumber: {
-      phoneNumber: "9841234567",
-    },
-    verified: false,
-
-    imageUrl:
-      "https://firebasestorage.googleapis.com/v0/b/daily-algo.appspot.com/o/images%2Fsanjib.jpg?alt=media&token=ee62ded6-708d-43bf-a5b3-f04a36a22d6a",
-
-  };
 
   return (
     <SafeAreaView className="flex-1">

@@ -1,7 +1,6 @@
 import { View, ScrollView, Text, Platform, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'expo-router';
 import { useRides } from '@/hooks/useRides';
 import VehicleTypeSelect from '@/components/VehicleTypeSelect';
 import InputField from '@/components/InputField';
@@ -13,10 +12,12 @@ import LocationSearch from '@/components/LocationSearch';
 import Button from '@/components/Button';
 import {format, parse} from 'date-fns';
 import { icons } from '@/constants';
+import { useAuth } from '@/context/AuthProvider';
+import { router } from 'expo-router';
 
 export default function PublishRide() {
-  const router = useRouter();
   const { publishRide } = useRides();
+  const { user } = useAuth();
   const { location, locationName } = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -29,17 +30,18 @@ export default function PublishRide() {
     if (selectedDate) {
       const formattedDate = format(selectedDate, 'yyyy-MM-dd hh:mm a');
       console.log("Selected Date: ", formattedDate);
-      setForm({ ...form, departureTime: formattedDate });
+      setForm({ ...form, departure_time: formattedDate });
     }
   };
 
   const [form, setForm] = useState({
+    riderId: user?.id,
     vehicleType: 'car',
-    vehiclePlate: '',
-    seatsAvailable: 1,
+    number_plate: '',
+    no_of_seats_available: 1,
     sourceLocation: null as Location | null,
     destinationLocation: null as Location | null,
-    departureTime: format(new Date(), 'yyyy-MM-dd hh:mm a'),
+    departure_time: format(new Date(), 'yyyy-MM-dd hh:mm a'),
   });
 
   useEffect(() => {
@@ -58,7 +60,7 @@ export default function PublishRide() {
   const handleSubmit = async () => {
     const errors = [];
 
-    if (!form.vehiclePlate.trim()) {
+    if (!form.number_plate.trim()) {
       errors.push('Vehicle plate number is required');
     }
 
@@ -70,13 +72,13 @@ export default function PublishRide() {
       errors.push('Destination location is required');
     }
 
-    if (form.seatsAvailable < 1) {
+    if (form.no_of_seats_available < 1) {
       errors.push('Seats available must be at least 1');
     }
 
-    const departureTime = parse(form.departureTime, 'yyyy-MM-dd hh:mm a', new Date());
+    const departure_time = parse(form.departure_time, 'yyyy-MM-dd hh:mma', new Date());
     const now = new Date();
-    if (departureTime < now) {
+    if (departure_time < now) {
       errors.push('Departure time must be in the future');
     }
 
@@ -88,8 +90,13 @@ export default function PublishRide() {
     try {
       setIsSubmitting(true);
       console.log("Form Detail: ", form);
-      await publishRide(form);
-      router.back();
+      const publishedRide = await publishRide(form);
+      console.log("Published Ride: ", publishedRide);
+      router.push({
+        pathname: "/(root)/published-ride",
+        params: { ride: publishedRide }
+      });
+      
     } catch (error) {
       console.error('Error:', error);
       alert('Failed to publish ride. Please try again.');
@@ -106,19 +113,19 @@ export default function PublishRide() {
 
       <VehicleTypeSelect
         value={form.vehicleType}
-        onChange={(value) => setForm({ ...form, vehicleType: value, seatsAvailable: 1 })}
+        onChange={(value) => setForm({ ...form, vehicleType: value, no_of_seats_available: 1 })}
       />
 
       <InputField
         title="Vehicle Plate"
         placeholder="Enter vehicle plate number"
-        value={form.vehiclePlate}
-        onChangeText={(value) => setForm({ ...form, vehiclePlate: value })}
+        value={form.number_plate}
+        onChangeText={(value) => setForm({ ...form, number_plate: value })}
       />
 
       <SeatCounter
-        value={form.seatsAvailable}
-        onChange={(value) => setForm({ ...form, seatsAvailable: value })}
+        value={form.no_of_seats_available}
+        onChange={(value) => setForm({ ...form, no_of_seats_available: value })}
         vehicleType={form.vehicleType}
       />
 
@@ -138,14 +145,14 @@ export default function PublishRide() {
       <View className="mt-4 mb-6">
         <Text className="text-lg font-plusjakartasans mb-2">Departure Time</Text>
         <Button
-          title={form.departureTime.toLocaleString()}
+          title={form.departure_time.toLocaleString()}
           isSecondary={true}
           onPress={() => setShowDatePicker(true)}
         />
         {(showDatePicker || Platform.OS === 'ios') && (
           <DateTimePicker
             testID="dateTimePicker"
-            value={parse(form.departureTime, 'yyyy-MM-dd hh:mm a', new Date())}
+            value={parse(form.departure_time, 'yyyy-MM-dd hh:mm a', new Date())}
             mode="time"
             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             onChange={handleDateChange}
