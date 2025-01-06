@@ -13,7 +13,7 @@ type Chat = {
   user_2_id: string;
   users: {
     name: string;
-    photo_url: string | null;
+    photo_url: string;
   }[];
 };
 
@@ -35,6 +35,9 @@ const ChatList = () => {
       .select("id, user_1_id, user_2_id, users!user_2_id (name, photo_url)")
       .or(`user_1_id.eq.${user.id},user_2_id.eq.${user.id}`);
 
+      console.log("Chats Data:", data);
+      console.log("Chats Error:", error);
+
     if (error) {
       console.error(error);
     } else {
@@ -48,6 +51,10 @@ const ChatList = () => {
       pathname: `root/tabs/chat/${chatId}:chat`,
     });
   };
+
+  useEffect(() => {
+    console.log("Chats data:", chats);
+  }, [chats]);
 
   return (
     <SafeAreaView className="flex-1 bg-white p-5">
@@ -71,13 +78,30 @@ const ChatList = () => {
         ) : (
           <FlatList
             data={chats}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, index) => item.id || index.toString()}
+            scrollEnabled={false}
             renderItem={({ item }) => {
-              const user = item.users[0]; // Access the user info
+              console.log("Item in render:", item);
+              const user = item.users[0];
+              console.log("User in render:", user);
+              if (!user) {
+                return (
+                  <View className="flex-row items-center p-3 border-b">
+                    <Text className="text-lg">Unknown User</Text>
+                  </View>
+                );
+              }
+              const { name, photo_url } = user;
               return (
                 <TouchableOpacity onPress={() => handleChatPress(item.id)}>
                   <View className="flex-row items-center p-3 border-b">
-                    <Text className="text-lg">{user.name}</Text>
+                    {photo_url && (
+                      <Image
+                        source={{ uri: photo_url }}
+                        style={{ width: 40, height: 40, borderRadius: 20 }}
+                      />
+                    )}
+                    <Text className="text-lg ml-3">{name}</Text>
                   </View>
                 </TouchableOpacity>
               );
