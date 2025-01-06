@@ -19,36 +19,37 @@ export function useLocation() {
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
 
-      // let address = await Location.reverseGeocodeAsync({
-      //   latitude: location.coords.latitude,
-      //   longitude: location.coords.longitude
-      // });
-      // console.log('Address: ', address);
+      let address = await Location.reverseGeocodeAsync({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
+      });
+      // console.log('Address: ', address[0].formattedAddress);
+      setLocationName(address[0].formattedAddress);
 
-      if (location) {
-        const { latitude, longitude } = location.coords;
-        try {
-          const response = await fetch(
-            `https://api.openrouteservice.org/geocode/reverse?api_key=${ORS_API_KEY}&point.lat=${latitude}&point.lon=${longitude}&size=1`,
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-              }
-            }
-          );
+      // if (location) {
+      //   const { latitude, longitude } = location.coords;
+      //   try {
+      //     const response = await fetch(
+      //       `https://api.openrouteservice.org/geocode/reverse?api_key=${ORS_API_KEY}&point.lat=${latitude}&point.lon=${longitude}&size=1`,
+      //       {
+      //         headers: {
+      //           'Accept': 'application/json',
+      //           'Content-Type': 'application/json',
+      //         }
+      //       }
+      //     );
 
-          const data = await response.json();
-          if (data.features && data.features.length > 0) {
-            setLocationName(data.features[0].properties.label);
-          } else {
-            setLocationName('Unknown location');
-          }
-        } catch (error) {
-          console.error('Error fetching location name:', error);
-          setLocationName('Error fetching location name');
-        }
-      }
+      //     const data = await response.json();
+      //     if (data.features && data.features.length > 0) {
+      //       setLocationName(data.features[0].properties.label);
+      //     } else {
+      //       setLocationName('Unknown location');
+      //     }
+      //   } catch (error) {
+      //     console.error('Error fetching location name:', error);
+      //     setLocationName('Error fetching location name');
+      //   }
+      // }
 
     })();
   }, []);

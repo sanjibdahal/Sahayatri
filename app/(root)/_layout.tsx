@@ -1,7 +1,6 @@
 import Loader from "@/components/Loader";
 import { useAuth } from "@/context/AuthProvider";
 import { Redirect, Stack } from "expo-router";
-import { ActivityIndicator } from "react-native";
 
 const Layout = () => {
 
@@ -20,6 +19,7 @@ const Layout = () => {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="maps" options={{ headerShown: false }} />
       <Stack.Screen name="publish-ride" options={{ headerShown: false }} />
+      <Stack.Screen name="published-ride" options={{ headerShown: false }} />
       <Stack.Screen name="request-ride" options={{ headerShown: false }} />
     </Stack>
   );
