@@ -21,6 +21,15 @@ export interface Ride {
   created_at: Date;
 }
 
+export interface MatchedRide extends Ride {
+  sourceDistance: number;
+  destinationDistance: number;
+  sourceWalkingTime: number;
+  destinationWalkingTime: number;
+  isExactMatch: boolean;
+  isNearbyMatch: boolean;
+}
+
 export interface RideRequest {
   id: string;
   ride_id: string;

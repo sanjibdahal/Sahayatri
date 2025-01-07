@@ -1,39 +1,58 @@
 import { View } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useLocation } from '@/hooks/useLocation';
+import RouteMap from '@/app/(root)/RouteMap';
 
 type Props = {
-  initialLocation?: { latitude: number; longitude: number };
+  sourceLocation: { latitude: number; longitude: number };
   onLocationSelect?: (location: { latitude: number; longitude: number }) => void;
-  selectedLocation?: { latitude: number; longitude: number } | null;
+  destinationLocation?: { latitude: number; longitude: number } | null;
+  walkingPoints?: {
+    start: { latitude: number; longitude: number };
+    end: { latitude: number; longitude: number };
+  }[];
 };
 
-export default function Maps({ initialLocation, onLocationSelect, selectedLocation }: Props) {
+export default function Maps({ sourceLocation, onLocationSelect, destinationLocation, walkingPoints }: Props) {
   const { location } = useLocation();
-  console.log('Current Location: ', location);
+  // console.log('Current Location: ', location);
 
   const defaultRegion = {
-    latitude: initialLocation?.latitude || location?.coords.latitude || 27.7172,
-    longitude: initialLocation?.longitude || location?.coords.longitude || 85.3240,
+    latitude: sourceLocation?.latitude || location?.coords.latitude || 27.7172,
+    longitude: destinationLocation?.longitude || location?.coords.longitude || 85.3240,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 h-96 w-full">
       <MapView
         provider={PROVIDER_GOOGLE}
         style={{ flex: 1 }}
         initialRegion={defaultRegion}
         onPress={(e) => onLocationSelect?.(e.nativeEvent.coordinate)}
       >
-        {selectedLocation && (
+        {sourceLocation && (
           <Marker
-            coordinate={selectedLocation}
+            coordinate={sourceLocation}
             pinColor="#57BE5E"
           />
         )}
       </MapView>
+      <RouteMap
+        userLocation={sourceLocation}
+        destination={destinationLocation}
+      />
+
+      {walkingPoints?.map((points, index) => (
+        <Polyline
+          key={index}
+          coordinates={[points.start, points.end]}
+          strokeColor="#57BE5E"
+          strokeWidth={2}
+          lineDashPattern={[5, 5]}
+        />
+      ))}
     </View>
   );
 }

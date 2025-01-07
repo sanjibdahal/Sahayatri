@@ -10,10 +10,11 @@ import { Location } from '@/types/type';
 import { useLocation } from '@/hooks/useLocation';
 import LocationSearch from '@/components/LocationSearch';
 import Button from '@/components/Button';
-import {format, parse} from 'date-fns';
+import { format, parse } from 'date-fns';
 import { icons } from '@/constants';
 import { useAuth } from '@/context/AuthProvider';
 import { router } from 'expo-router';
+import Maps from '@/components/Maps';
 
 export default function PublishRide() {
   const { publishRide } = useRides();
@@ -96,7 +97,7 @@ export default function PublishRide() {
         pathname: "/(root)/published-ride",
         params: { ride: publishedRide }
       });
-      
+
     } catch (error) {
       console.error('Error:', error);
       alert('Failed to publish ride. Please try again.');
@@ -127,7 +128,13 @@ export default function PublishRide() {
         value={form.no_of_seats_available}
         onChange={(value) => setForm({ ...form, no_of_seats_available: value })}
         vehicleType={form.vehicleType}
+        title='Available Seats'
       />
+
+      <Maps sourceLocation={location ? {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
+      } : { latitude: 0, longitude: 0 }} destinationLocation={form.destinationLocation} />
 
       <InputField
         title="Source Location"

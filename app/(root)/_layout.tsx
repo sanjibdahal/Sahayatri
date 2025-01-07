@@ -21,6 +21,8 @@ const Layout = () => {
       <Stack.Screen name="publish-ride" options={{ headerShown: false }} />
       <Stack.Screen name="published-ride" options={{ headerShown: false }} />
       <Stack.Screen name="request-ride" options={{ headerShown: false }} />
+      <Stack.Screen name="find-ride" options={{ headerShown: false }} />
+      <Stack.Screen name="search-results" options={{ headerShown: true }} />
     </Stack>
   );
 };

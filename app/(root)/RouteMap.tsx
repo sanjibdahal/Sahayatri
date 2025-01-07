@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 
-const RouteMap = ({ userLocation, destination }: { userLocation: { latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number; } | null; destination: any }) => {
+const RouteMap = ({ userLocation, destination }: { userLocation: { latitude: number; longitude: number; }; destination: any }) => {
   const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } >();
   const [routeCoordinates, setRouteCoordinates] = useState<{ latitude: number; longitude: number }[]>([]);
 

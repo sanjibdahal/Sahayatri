@@ -82,7 +82,7 @@ const ChatList = () => {
             scrollEnabled={false}
             renderItem={({ item }) => {
               console.log("Item in render:", item);
-              const user = item.users[0];
+              const user = item.users;
               console.log("User in render:", user);
               if (!user) {
                 return (

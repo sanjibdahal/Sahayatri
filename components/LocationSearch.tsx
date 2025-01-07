@@ -73,7 +73,7 @@ export default function LocationSearch({ onLocationSelect, placeholder, value }:
             <View>
                 <InputField
                     icon={"search"}
-                    title='Destination'
+                    title='Destination Location'
                     placeholder={placeholder || "Search location"}
                     value={selectedLocation || query}
                     onChangeText={(text) => {
@@ -102,8 +102,8 @@ export default function LocationSearch({ onLocationSelect, placeholder, value }:
                         borderRadius: 8,
                         marginTop: 8,
                     }}
-                    scrollEnabled={true}
-                    nestedScrollEnabled={true}
+                    scrollEnabled={false}
+                    nestedScrollEnabled={false}
                     keyboardShouldPersistTaps="handled"
                     renderItem={({ item }) => (
                         <TouchableOpacity

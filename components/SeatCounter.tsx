@@ -5,9 +5,10 @@ type Props = {
   value: number;
   onChange: (value: number) => void;
   vehicleType: string;
+  title: string;
 };
 
-export default function SeatCounter({ value, onChange, vehicleType}: Props) {
+export default function SeatCounter({ value, onChange, vehicleType, title}: Props) {
   
   const maxSeats = vehicleType === 'bike' ? 1 : 3;
   const minSeats = 1;
@@ -26,7 +27,7 @@ export default function SeatCounter({ value, onChange, vehicleType}: Props) {
 
   return (
     <View className="mb-4">
-      <Text className="text-lg font-plusjakartasans_600semibold color-graysecondary mb-2">Available Seats</Text>
+      <Text className="text-lg font-plusjakartasans_600semibold color-graysecondary mb-2">{title}</Text>
       <View className="flex-row items-center bg-gray-100 rounded-lg p-2">
         <TouchableOpacity
           className={`p-2 rounded-lg ${value <= minSeats ? 'opacity-50' : ''}`}

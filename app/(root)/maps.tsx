@@ -131,10 +131,15 @@ export default function Maps() {
         )}
       </MapView>
 
-      <RouteMap 
-        userLocation={userLocation}
-        destination={destination}
-      />
+      {userLocation && (
+        <RouteMap 
+          userLocation={{
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude
+          }}
+          destination={destination}
+        />
+      )}
       
       {/* <TouchableOpacity style={styles.menuButton} onPress={() => {router.push("/(root)/(tabs)/home")}}>
         <Ionicons name="arrow-back" size={24} color="black" />
