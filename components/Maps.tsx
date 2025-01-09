@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useLocation } from '@/hooks/useLocation';
-import RouteMap from '@/app/(root)/RouteMap';
+import RouteMap from '@/components/RouteMap';
 
 type Props = {
   sourceLocation: { latitude: number; longitude: number };
@@ -32,27 +32,14 @@ export default function Maps({ sourceLocation, onLocationSelect, destinationLoca
         initialRegion={defaultRegion}
         onPress={(e) => onLocationSelect?.(e.nativeEvent.coordinate)}
       >
-        {sourceLocation && (
-          <Marker
-            coordinate={sourceLocation}
-            pinColor="#57BE5E"
-          />
-        )}
       </MapView>
       <RouteMap
         userLocation={sourceLocation}
         destination={destinationLocation}
+        walkingPoints={walkingPoints}
       />
 
-      {walkingPoints?.map((points, index) => (
-        <Polyline
-          key={index}
-          coordinates={[points.start, points.end]}
-          strokeColor="#57BE5E"
-          strokeWidth={2}
-          lineDashPattern={[5, 5]}
-        />
-      ))}
+      
     </View>
   );
 }

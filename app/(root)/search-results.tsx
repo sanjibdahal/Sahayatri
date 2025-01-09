@@ -6,6 +6,7 @@ import { useRides } from '@/hooks/useRides';
 import RideCard from '@/components/RideCard';
 import { MatchedRide } from '@/types/type';
 import { Feather } from '@expo/vector-icons';
+import Maps from '@/components/Maps';
 
 export default function SearchResults() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function SearchResults() {
   const [exactMatches, setExactMatches] = useState<MatchedRide[]>([]);
   const [nearbyMatches, setNearbyMatches] = useState<MatchedRide[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedRide, setSelectedRide] = useState<MatchedRide | null>(null);
 
   useEffect(() => {
     loadRides();
@@ -40,6 +42,40 @@ export default function SearchResults() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getWalkingPoints = (ride: MatchedRide) => {
+    const points = [];
+    
+    // Add source walking point if not exact match
+    // if (!ride.isExactMatch && ride.sourceDistance > 0) {
+    //   points.push({
+    //     start: {
+    //       latitude: JSON.parse(params.source as string).latitude,
+    //       longitude: JSON.parse(params.source as string).longitude,
+    //     },
+    //     end: {
+    //       latitude: ride.source_location.latitude,
+    //       longitude: ride.source_location.longitude,
+    //     },
+    //   });
+    // }
+
+    // Add destination walking point if not exact match
+    if (!ride.isExactMatch && ride.destinationDistance > 0) {
+      points.push({
+        start: {
+          latitude: ride.destination_location.latitude,
+          longitude: ride.destination_location.longitude,
+        },
+        end: {
+          latitude: JSON.parse(params.destination as string).latitude,
+          longitude: JSON.parse(params.destination as string).longitude,
+        },
+      });
+    }
+
+    return points;
   };
 
   if (isLoading) {
@@ -74,6 +110,15 @@ export default function SearchResults() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="p-4">
+      {selectedRide && (
+          <View className="h-64 mb-4 rounded-xl overflow-hidden">
+            <Maps
+              sourceLocation={JSON.parse(params.source as string)}
+              destinationLocation={JSON.parse(params.destination as string)}
+              walkingPoints={getWalkingPoints(selectedRide)}
+            />
+          </View>
+        )}
         {exactMatches.length > 0 && (
           <View className="mb-6">
             <Text className="text-xl font-plusjakartasans_600semibold mb-4">
@@ -83,7 +128,10 @@ export default function SearchResults() {
               <RideCard
                 key={ride.id}
                 ride={ride}
-                onPress={() => router.push(`/ride/${ride.id}`)}
+                onPress={() => {
+                  setSelectedRide(ride);
+                  router.push(`/ride/${ride.id}`);
+                }}
                 containerStyles="mb-4"
               />
             ))}
@@ -99,12 +147,15 @@ export default function SearchResults() {
               <View key={ride.id} className="mb-4">
                 <RideCard
                   ride={ride}
-                  onPress={() => router.push(`/ride/${ride.id}`)}
+                  onPress={() => {
+                    setSelectedRide(ride);
+                    router.push(`/ride/${ride.id}`);
+                  }}
                 />
-                <Text className="text-gray font-plusjakartasans mt-2">
+                {/* <Text className="text-gray font-plusjakartasans mt-2">
                   {ride.sourceWalkingTime > 0 && `${Math.round(ride.sourceWalkingTime / 60)} min walk to pickup • `}
                   {ride.destinationWalkingTime > 0 && `${Math.round(ride.destinationWalkingTime / 60)} min walk from drop-off`}
-                </Text>
+                </Text> */}
               </View>
             ))}
           </View>

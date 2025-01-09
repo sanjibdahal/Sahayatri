@@ -4,7 +4,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Feather } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import { Locations } from './locations';
-import RouteMap from './RouteMap';
+import RouteMap from '@/components/RouteMap';
 import Loader from '@/components/Loader';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';

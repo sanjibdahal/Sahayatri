@@ -36,7 +36,7 @@ export default function SignIn() {
       }
       if (data.session) {
         router.replace('/(root)/home');
-        console.log("User signed in successfully: ", data);
+        console.log("User signed in successfully.");
       }
     } catch (error) {
       console.error("Error signing in:", error);

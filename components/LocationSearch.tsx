@@ -51,7 +51,7 @@ export default function LocationSearch({ onLocationSelect, placeholder, value }:
     const searchLocations = async () => {
         try {
             const response = await fetch(
-                `https://api.openrouteservice.org/geocode/search?api_key=${ORS_API_KEY}&text=${encodeURIComponent(query)}&boundary.country=NP`,
+                `https://api.openrouteservice.org/geocode/autocomplete?api_key=${ORS_API_KEY}&text=${encodeURIComponent(query)}&boundary.country=NP`,
                 {
                     headers: {
                         'Accept': 'application/json',
@@ -69,7 +69,7 @@ export default function LocationSearch({ onLocationSelect, placeholder, value }:
     };
 
     return (
-        <View>
+        <View className='mt-4'>
             <View>
                 <InputField
                     icon={"search"}

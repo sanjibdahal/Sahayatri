@@ -27,7 +27,7 @@ export default function RequestRide() {
     setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
       const formattedDate = format(selectedDate, 'yyyy-MM-dd hh:mm a');
-      console.log("Selected Date: ", formattedDate);
+      // console.log("Selected Date: ", formattedDate);
       setForm({ ...form, departure_time: formattedDate });
     }
   };
@@ -39,16 +39,17 @@ export default function RequestRide() {
   });
 
   const handleSearch = () => {
-      router.push({
-        pathname: '/(root)/search-results',
-        params: {
-          source: JSON.stringify(form.sourceLocation),
-          destination: JSON.stringify(form.destinationLocation),
-          seats: form.no_of_seats_available,
-          departureTime: form.departure_time,
-        },
-      });
-    };
+    console.log("Form Data: ", form);
+    router.push({
+      pathname: '/(root)/search-results',
+      params: {
+        source: JSON.stringify(form.sourceLocation),
+        destination: JSON.stringify(form.destinationLocation),
+        seats: form.no_of_seats_available,
+        departureTime: form.departure_time,
+      },
+    });
+  };
 
   useEffect(() => {
     if (location) {
@@ -112,7 +113,7 @@ export default function RequestRide() {
         <Maps sourceLocation={location ? {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude
-        } : { latitude: 0, longitude: 0 }} destinationLocation={form.destinationLocation}/>
+        } : { latitude: 0, longitude: 0 }} destinationLocation={form.destinationLocation} />
 
 
         <InputField

@@ -4,19 +4,45 @@ import { StyleSheet } from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 
-const RouteMap = ({ userLocation, destination }: { userLocation: { latitude: number; longitude: number; }; destination: any }) => {
-  const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } >();
+const RouteMap = ({ userLocation, destination, walkingPoints }: {
+  userLocation: { latitude: number; longitude: number; } | null; destination: any; walkingPoints?: {
+    start: { latitude: number; longitude: number };
+    end: { latitude: number; longitude: number };
+  }[];
+}) => {
+  const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number }>();
   const [routeCoordinates, setRouteCoordinates] = useState<{ latitude: number; longitude: number }[]>([]);
+  const [walkingRoutes, setWalkingRoutes] = useState<{ latitude: number; longitude: number }[]>([]);
 
   useEffect(() => {
     getCurrentLocation();
   }, []);
 
   useEffect(() => {
-    if (currentLocation && destination) {
-      calculateRoute();
-    }
+    const getRoute = async () => {
+      if (currentLocation && destination) {
+        const nrouteCoordinates = await calculateRoute(currentLocation, destination);
+        if (nrouteCoordinates) {
+          setRouteCoordinates(nrouteCoordinates);
+        }
+      }
+    };
+    getRoute();
   }, [currentLocation, destination]);
+
+  useEffect(() => {
+    const getWalkingRoutes = async () => {
+      if (walkingPoints && walkingPoints.length > 0) {
+        for (const point of walkingPoints) {
+          const walkRoute = await calculateRoute(point.start, point.end);
+          if (walkRoute) {
+            setWalkingRoutes(prev => [...prev, ...walkRoute]);
+          }
+        }
+      }
+    };
+    getWalkingRoutes();
+  }, [walkingPoints]);
 
   const getCurrentLocation = async () => {
     try {
@@ -36,30 +62,30 @@ const RouteMap = ({ userLocation, destination }: { userLocation: { latitude: num
     }
   };
 
-  const calculateRoute = async () => {
-    const apiKey = process.env.EXPO_PUBLIC_DIRECTION_API_KEY; 
+  const calculateRoute = async (currentLocation: { latitude: number; longitude: number }, destination: { latitude: number; longitude: number }) => {
+    const apiKey = process.env.EXPO_PUBLIC_DIRECTION_API_KEY;
     const apiUrl = process.env.EXPO_PUBLIC_DIRECTION_API_URL;
-    
+
     try {
       if (!currentLocation) {
         console.error('Current location is null');
         return;
       }
       const response = await fetch(`${apiUrl}?api_key=${apiKey}&start=${currentLocation.longitude},${currentLocation.latitude}&end=${destination.longitude},${destination.latitude}`);
-      
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-  
+
       const data = await response.json();
-      
+
       if (data.features && data.features.length > 0) {
         const routeGeometry = data.features[0].geometry.coordinates;
         const newRouteCoordinates = routeGeometry.map((coord: [number, number]) => ({
           longitude: coord[0],
           latitude: coord[1]
         }));
-        setRouteCoordinates(newRouteCoordinates);
+        return newRouteCoordinates;
       } else {
         console.error('No route found');
         fallbackToStraightLine();
@@ -99,9 +125,9 @@ const RouteMap = ({ userLocation, destination }: { userLocation: { latitude: num
       <Marker
         coordinate={currentLocation}
         title="Current Location"
-        pinColor="blue"
+        pinColor="#57BE5E"
       />
-      
+
       {destination && (
         <Marker
           coordinate={{
@@ -117,6 +143,23 @@ const RouteMap = ({ userLocation, destination }: { userLocation: { latitude: num
           coordinates={routeCoordinates}
           strokeColor="#3344FF"
           strokeWidth={3}
+        />
+      )}
+
+      {walkingRoutes.length > 0 && (
+        <Polyline
+          coordinates={walkingRoutes}
+          strokeColor="#8888FF"
+          strokeWidth={4}
+          lineDashPattern={[5, 5]}
+        />
+      )}
+
+      {walkingRoutes.length > 0 && (
+        <Marker
+          coordinate={walkingRoutes[0]}
+          title="Walking Start"
+          pinColor="#8888FF"
         />
       )}
     </MapView>
