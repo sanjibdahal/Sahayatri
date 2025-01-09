@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TextInput, Button, KeyboardAvoidingView } from "react-native";
+import { View, Text, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthProvider";
+import { Feather } from "@expo/vector-icons";
 
 const ChatDetail = () => {
   const { chatId } = useLocalSearchParams();
@@ -64,23 +65,32 @@ const ChatDetail = () => {
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" className="flex-1 bg-white p-5">
+    <KeyboardAvoidingView behavior="padding" className="flex-1 p-5">
       <FlatList
         data={messages}
         keyExtractor={(item) => item.id}
+        
         renderItem={({ item }) => (
-          <View className={`p-3 ${item.sender_id === user?.id ? "self-end" : "self-start"}`}>
+          <View className={`max-w-[80%] mb-3 p-2 ${item.sender_id === user?.id ? "self-end bg-[#57BE5E] rounded-lg" 
+            : "self-start border rounded-lg"}`}>
             <Text>{item.message}</Text>
           </View>
         )}
       />
+      <View className="flex-row items-center p-1">
       <TextInput
         placeholder="Type a message..."
         value={newMessage}
         onChangeText={setNewMessage}
-        className="border p-2 mb-3"
+        className="border flex-1 p-2 mr-2 rounded-lg"
       />
-      <Button title="Send" onPress={sendMessage} />
+      <TouchableOpacity
+          onPress={sendMessage}
+          className="bg-green-500 rounded-full px-3 py-3"
+        >
+        <Feather name="send" size={16} color="white"/>
+      </TouchableOpacity>
+      </View>
     </KeyboardAvoidingView>
   );
 };
