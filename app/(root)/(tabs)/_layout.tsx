@@ -9,11 +9,16 @@ export default function Layout() {
   return (
     <Tabs
       // initialRouteName="index"
-      screenOptions={{
+      screenOptions={({route}) => {
+
+        const routeName = route.name;
+        const hideTabBarScreens = ["chat/[chatId]"];
+
+        return {
         tabBarActiveTintColor: '#57BE5E',
         tabBarInactiveTintColor: "gray",
         tabBarShowLabel: true,
-        // tabBarStyle: {
+        tabBarStyle: hideTabBarScreens.includes(routeName)  ? { display : "none" } : {
         //   backgroundColor: "#333333",
         //   borderRadius: 50,
         //   paddingBottom: 30, // ios only
@@ -26,7 +31,8 @@ export default function Layout() {
         //   alignItems: "center",
         //   flexDirection: "row",
         //   position: "absolute",
-        // },
+        },
+        };
       }}
     >
       <Tabs.Screen
