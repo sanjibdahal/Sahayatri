@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Image, TouchableOpacity, FlatList, ScrollView, Text, View } from "react-native";
+import { Image, TouchableOpacity, FlatList, ScrollView, Text, View, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "@/lib/supabase";
-import { useRouter, Link } from "expo-router";
+import { Link } from "expo-router";
 import { useAuth } from "@/context/AuthProvider";
 
 import { icons } from "@/constants";
@@ -21,7 +21,6 @@ const ChatList = () => {
   const { user, loading } = useAuth();
   const [chats, setChats] = useState<Chat[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  // const router = useRouter();
 
   useEffect(() => {
     if (!loading) fetchChats();
@@ -34,9 +33,6 @@ const ChatList = () => {
       .from("chats")
       .select("id, user_1_id, user_2_id, users!user_2_id (name, photo_url)")
       .or(`user_1_id.eq.${user.id},user_2_id.eq.${user.id}`);
-
-      // console.log("Chats Data:", data);
-      // console.log("Chats Error:", error);
 
     if (error) {
       console.error(error);
@@ -56,10 +52,20 @@ const ChatList = () => {
   //   console.log("Chats data:", chats);
   // }, [chats]);
 
+  if (isLoading || loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-[#dcdcdc]">
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" className='color-primary' />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView className="flex-1 p-5">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Text className="text-2xl font-plusjakartasans_700bold">Chat</Text>
+        <Text className="text-2xl font-plusjakartasans_700bold mb-3">Chat</Text>
         {chats.length === 0 ? (
           <View className="flex-1 h-fit flex justify-center items-center">
             <Image
@@ -87,10 +93,11 @@ const ChatList = () => {
               if (!user) {
                 return (
                   <View className="flex-row items-center p-3 border-b">
-                    <Text className="text-lg">Unknown User</Text>
+                    <Text className="text-lg font-plusjakartasans_500medium">Unknown User</Text>
                   </View>
                 );
               }
+              // const { name, photo_url } = user[0];
               const { name, photo_url } = user;
               return (
                 <Link
@@ -101,15 +108,15 @@ const ChatList = () => {
                   asChild
                 >
                   <TouchableOpacity>
-                  <View className="flex-row items-center p-3 border-b">
-                    {photo_url && (
-                      <Image
-                        source={{ uri: photo_url }}
-                        style={{ width: 40, height: 40, borderRadius: 20 }}
-                      />
-                    )}
-                    <Text className="text-lg ml-3">{name}</Text>
-                  </View>
+                    <View className="flex-row items-center p-3 bg-white flex mb-2 rounded-2xl">
+                      {photo_url && (
+                        <Image
+                          source={{ uri: photo_url }}
+                          style={{ width: 40, height: 40, borderRadius: 20 }}
+                        />
+                      )}
+                      <Text className="text-lg font-plusjakartasans_500medium ml-3">{name}</Text>
+                    </View>
                   </TouchableOpacity>
                 </Link>
               );
