@@ -66,7 +66,7 @@ export default function Rides() {
                 <RideRequestCard
                   ride={item}
                   showImage={true}
-                  onPress={() => { }}
+                  onPress={() => { router.push(`/riderequest/${item.ride_id}`) }}
                 />
               )}
               ItemSeparatorComponent={() => <View className="h-4" />}
@@ -115,7 +115,7 @@ export default function Rides() {
                 <RideCard
                   ride={item}
                   showImage={true}
-                  onPress={() => { }}
+                  onPress={() => { console.log('hello');router.push(`/ride/${item.id}`) }}
                 />
               )}
               ItemSeparatorComponent={() => <View className="h-4" />}

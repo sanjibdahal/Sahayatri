@@ -17,7 +17,7 @@ export interface Ride {
   vehicle_type: 'car' | 'bike';
   no_of_seats_available: number;
   number_plate: string;
-  status: 'active' | 'completed' | 'cancelled';
+  status: 'active' | 'completed' | 'cancelled' | 'booked';
   created_at: Date;
 }
 

@@ -90,11 +90,13 @@ export default function RideRequestCard({ ride, onPress, containerStyles, showMa
                         {ride.seat_required} {ride.seat_required == 1 ? 'seat' : 'seats'}
                     </Text>
                 </View>
+                {ride.status == 'accepted' && (
                 <TouchableOpacity onPress={onPress}>
                     <Text className="text-primary font-plusjakartasans_600semibold">
                         View Details
                     </Text>
                 </TouchableOpacity>
+                )}
             </View>
             {/* {'sourceWalkingTime' in ride && (ride.sourceWalkingTime > 0 || ride.destinationWalkingTime > 0) && (
         <View className="mt-2 pt-2 border-t border-gray-100">

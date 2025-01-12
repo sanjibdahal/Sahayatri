@@ -9,10 +9,9 @@ import { MatchedRide, Ride } from '@/types/type';
 import { Feather } from '@expo/vector-icons';
 import { useRides } from '@/hooks/useRides';
 
-export default function RideDetails() {
+export default function RideRequestDetails() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
-  const params = useLocalSearchParams();
   const [ride, setRide] = useState<Ride | MatchedRide | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [walkingPoints, setWalkingPoints] = useState([]);
@@ -20,9 +19,6 @@ export default function RideDetails() {
   const { requestRide } = useRides();
 
   useEffect(() => {
-    const walkingPointsData = JSON.parse(params.walkingPoints as string);
-    setWalkingPoints(walkingPointsData);
-    console.log('Walking Points: ', walkingPointsData);
     loadRideDetails();
   }, [id]);
 
@@ -35,10 +31,10 @@ export default function RideDetails() {
         .single();
 
       if (error) throw error;
-      setRide(JSON.parse(params.ride as string));
+      setRide(data);
       setRiderInfo(data.users);
       console.log('Ride Details: ', data);
-      console.log("Params: ", JSON.parse(params.ride as string));
+      
     } catch (error) {
       console.error('Error loading ride details:', error);
     } finally {

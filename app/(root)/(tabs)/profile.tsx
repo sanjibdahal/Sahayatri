@@ -79,14 +79,14 @@ const Profile = () => {
               )}
             </View>
 
-            <Text className="text-lg color-graysecondary font-plusjakartasans_600semibold mt-2 ">
+            {/* <Text className="text-lg color-graysecondary font-plusjakartasans_600semibold mt-2 ">
               My Documents
             </Text>
             <View className="flex flex-row items-center justify-start w-full ">
               <Text className="text-xl color-graysecondary font-plusjakartasans_600semibold ml-3">
                 No documents uploaded
               </Text>
-            </View>
+            </View> */}
 
           </View>
         </View>
