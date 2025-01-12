@@ -80,7 +80,7 @@ export default function SearchResults() {
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 bg-white justify-center items-center">
+      <SafeAreaView className="flex-1 bg-[#e1e1e1] justify-center items-center">
         <Text className="font-plusjakartasans">Searching for rides...</Text>
       </SafeAreaView>
     );
@@ -88,7 +88,7 @@ export default function SearchResults() {
 
   if (exactMatches.length === 0 && nearbyMatches.length === 0) {
     return (
-      <SafeAreaView className="flex-1 bg-white p-4">
+      <SafeAreaView className="flex-1 bg-[#e1e1e1] p-4">
         <View className="items-center mb-8">
           <Feather name="alert-circle" size={48} color="#6B7280" />
           <Text className="text-xl font-plusjakartasans_600semibold mt-4">
@@ -108,17 +108,17 @@ export default function SearchResults() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <ScrollView className="p-4">
-      {selectedRide && (
-          <View className="h-64 mb-4 rounded-xl overflow-hidden">
+    <SafeAreaView className="flex-1 bg-[#e1e1e1]">
+      <ScrollView className="px-4">
+      {/* {selectedRide && (
+          <View className=" mb-4 rounded-xl overflow-hidden">
             <Maps
-              sourceLocation={JSON.parse(params.source as string)}
-              destinationLocation={JSON.parse(params.destination as string)}
+              sourceLocation={selectedRide.source_location}
+              destinationLocation={selectedRide.destination_location}
               walkingPoints={getWalkingPoints(selectedRide)}
             />
           </View>
-        )}
+        )} */}
         {exactMatches.length > 0 && (
           <View className="mb-6">
             <Text className="text-xl font-plusjakartasans_600semibold mb-4">
@@ -128,9 +128,16 @@ export default function SearchResults() {
               <RideCard
                 key={ride.id}
                 ride={ride}
+                showMap={true}
                 onPress={() => {
-                  setSelectedRide(ride);
-                  router.push(`/ride/${ride.id}`);
+                  const walkingPoints = getWalkingPoints(ride);
+                  router.push({
+                    pathname: `/ride/${ride.id}`,
+                    params: {
+                      ride: JSON.stringify(ride),
+                      walkingPoints: JSON.stringify(walkingPoints)
+                    }
+                  });
                 }}
                 containerStyles="mb-4"
               />
@@ -147,9 +154,16 @@ export default function SearchResults() {
               <View key={ride.id} className="mb-4">
                 <RideCard
                   ride={ride}
+                  showMap={true}
                   onPress={() => {
-                    setSelectedRide(ride);
-                    router.push(`/ride/${ride.id}`);
+                    const walkingPoints = getWalkingPoints(ride);
+                    router.push({
+                      pathname: `/ride/${ride.id}`,
+                      params: {
+                        ride: JSON.stringify(ride),
+                        walkingPoints: JSON.stringify(walkingPoints)
+                      }
+                    });
                   }}
                 />
                 {/* <Text className="text-gray font-plusjakartasans mt-2">

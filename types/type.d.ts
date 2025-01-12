@@ -32,13 +32,13 @@ export interface MatchedRide extends Ride {
 
 export interface RideRequest {
   id: string;
+  user_id: string;
   ride_id: string;
-  requester_id: string;
-  seats_needed: number;
+  seat_required: number;
   status: 'pending' | 'accepted' | 'rejected';
-  source: Location;
-  destination: Location;
-  departure_time: Date;
+  source_location: Location;
+  destination_location: Location;
+  departure_time: string;
   created_at: Date;
 }
 
@@ -51,9 +51,8 @@ export interface Location {
 export interface Message {
   id: string;
   sender_id: string;
-  receiver_id: string;
-  content: string;
-  created_at: Date;
+  message: string;
+  created_at: string;
 }
 declare interface InputFieldProps extends TextInputProps {
   title: string;

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Ride, Location, MatchedRide } from "@/types/type";
+import { Ride, Location, MatchedRide, RideRequest } from "@/types/type";
+import { useAuth } from "@/context/AuthProvider";
 
 const EARTH_RADIUS = 6371; // Earth's radius in kilometers
 
@@ -30,6 +31,7 @@ function calculateWalkingTime(distance: number): number {
 export function useRides() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
   const publishRide = async (rideData: any) => {
     try {
@@ -63,13 +65,14 @@ export function useRides() {
     }
   };
 
-  const fetchAvailableRides = async () => {
+  const fetchAvailableRides = async (currentUserId: string) => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
         .from("rides")
         .select("*")
         .eq("status", "active")
+        .neq("rider_id", currentUserId)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -161,23 +164,38 @@ export function useRides() {
     }
   };
 
-  const requestRide = async (
-    rideId: string,
-    requestData: {
-      seat_required: number;
-      source_location: Location;
-      destination_location: Location;
-      departure_time: Date;
-    }
-  ) => {
+  const requestedRide = async () => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
-        .from("ride_requests")
+        .from("ride_request")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data as RideRequest[];
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const requestRide = async (rideData:any) => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from("ride_request")
         .insert([
           {
-            ride_id: rideId,
-            ...requestData,
+            ride_id: rideData.id,
+            user_id: user?.id,
+            source_location: rideData.source_location,
+            destination_location: rideData.destination_location,
+            departure_time: rideData.departure_time,
+            seat_required: parseInt(rideData.no_of_seats_available),
             status: "pending",
           },
         ])
@@ -189,10 +207,11 @@ export function useRides() {
       // Send notification to publisher
       await supabase.from("notifications").insert([
         {
-          user_id: data.publisher_id,
-          type: "ride_request",
-          content: "New ride request received",
-          ride_request_id: data.id,
+          user_id: user?.id,
+          rider_id: rideData.rider_id,
+          type: "Request for a ride",
+          content: `You have a new ride request from ${user?.user_metadata.name}`,
+          ride_id: rideData.id,
         },
       ]);
 
@@ -211,6 +230,7 @@ export function useRides() {
     publishedRideByMe,
     searchRides,
     requestRide,
+    requestedRide,
     isLoading,
     error,
   };

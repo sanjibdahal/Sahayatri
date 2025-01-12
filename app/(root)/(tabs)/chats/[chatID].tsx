@@ -4,13 +4,12 @@ import { useLocalSearchParams } from "expo-router";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthProvider";
 import { Feather } from "@expo/vector-icons";
+import { Message } from "@/types/type";
 
 const ChatDetail = () => {
   const { chatId } = useLocalSearchParams();
   const { user } = useAuth();
-  const [messages, setMessages] = useState<
-    { id: string; sender_id: string; message: string; created_at: string }[]
-  >([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
@@ -23,7 +22,7 @@ const ChatDetail = () => {
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "messages", filter: `chat_id=eq.${chatId}` },
-        (payload: { new: { id: string; sender_id: string; message: string; created_at: string } }) => {
+        (payload: { new: Message }) => {
           setMessages((prev) => [...prev, payload.new]);
         }
       )
@@ -69,27 +68,27 @@ const ChatDetail = () => {
       <FlatList
         data={messages}
         keyExtractor={(item) => item.id}
-        
+
         renderItem={({ item }) => (
-          <View className={`max-w-[80%] mb-3 p-2 ${item.sender_id === user?.id ? "self-end bg-[#57BE5E] rounded-lg" 
-            : "self-start border rounded-lg"}`}>
-            <Text>{item.message}</Text>
+          <View className={`max-w-[80%] text-white mb-2 flex items-center justify-center px-3 py-2 ${item.sender_id === user?.id ? "self-end bg-primary rounded-lg"
+            : "self-start bg-gray rounded-lg"}`}>
+            <Text className="text-white font-plusjakartasans_500medium">{item.message}</Text>
           </View>
         )}
       />
-      <View className="flex-row items-center p-1">
-      <TextInput
-        placeholder="Type a message..."
-        value={newMessage}
-        onChangeText={setNewMessage}
-        className="border flex-1 p-2 mr-2 rounded-lg"
-      />
-      <TouchableOpacity
+      <View className="flex flex-row items-center p-1">
+        <TextInput
+          placeholder="Type a message..."
+          value={newMessage}
+          onChangeText={setNewMessage}
+          className="border border-primary font-plusjakartasans_500medium p-3 px-4 mr-2 rounded-lg flex-1"
+        />
+        <TouchableOpacity
           onPress={sendMessage}
-          className="bg-green-500 rounded-full px-3 py-3"
+          className="bg-green-500 rounded-lg px-3 py-3"
         >
-        <Feather name="send" size={16} color="white"/>
-      </TouchableOpacity>
+          <Feather name="send" size={22} color="white" />
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );

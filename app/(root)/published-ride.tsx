@@ -25,14 +25,14 @@ export default function PublishedRide() {
 
     return (
         <SafeAreaView className='flex-1 bg-white'>
-            <View className="flex-1 p-4">
+            <View className="flex-1 p-4 items-center justify-center">
                 <Text className="text-2xl font-plusjakartasans_700bold mb-6">Ride Published Successfully</Text>
-                <Text className="text-lg mb-2">Vehicle Type: {ride.vehicle_type}</Text>
-                <Text className="text-lg mb-2">Vehicle Plate: {ride.number_plate}</Text>
-                <Text className="text-lg mb-2">Seats Available: {ride.no_of_seats_available}</Text>
-                <Text className="text-lg mb-2">Source Location: {ride.source_location.address}</Text>
-                <Text className="text-lg mb-2">Destination Location: {ride.destination_location.address}</Text>
-                <Text className="text-lg mb-2">Departure Time: {ride.departure_time}</Text>
+                <Text className="text-lg mb-2 font-plusjakartasans_500medium">Vehicle Type: {ride.vehicle_type}</Text>
+                <Text className="text-lg mb-2 font-plusjakartasans_500medium">Vehicle Plate: {ride.number_plate}</Text>
+                <Text className="text-lg mb-2 font-plusjakartasans_500medium">Seats Available: {ride.no_of_seats_available}</Text>
+                <Text className="text-lg mb-2 font-plusjakartasans_500medium">Source Location: {ride.source_location.address}</Text>
+                <Text className="text-lg mb-2 font-plusjakartasans_500medium">Destination Location: {ride.destination_location.address}</Text>
+                <Text className="text-lg mb-2 font-plusjakartasans_500medium">Departure Time: {ride.departure_time}</Text>
                 <Button title="View All Rides" onPress={() => router.push('/(root)/rides')} />
             </View>
         </SafeAreaView>

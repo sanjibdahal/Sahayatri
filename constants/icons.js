@@ -34,10 +34,13 @@ import to from "../assets/icons/to.png";
 import phone from "../assets/icons/phone.png";
 import addimage from "../assets/icons/add_image.png";
 import message from "../assets/icons/message.png";
+import confirm from "../assets/icons/confirm.png";
+import reject from "../assets/icons/reject.png";
 
 export default {
   home,
   plus,
+  reject,
   profile,
   leftArrow,
   menu,
@@ -72,4 +75,5 @@ export default {
   phone,
   addimage,
   message,
+  confirm
 };

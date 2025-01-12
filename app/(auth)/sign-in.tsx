@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, ScrollView, Alert } from "react-native";
+import { View, Text, ImageBackground, ScrollView, Alert, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -87,7 +87,16 @@ export default function SignIn() {
               onChangeText={(value) => setForm({ ...form, password: value })}
             />
 
+            <TouchableOpacity
+              onPress={async () => {
 
+                let { data, error } = await supabase.auth.resetPasswordForEmail(form.email);
+                console.log(data, error);
+
+              }}
+            >
+              <Text className="font-plusjakartasans_600semibold color-primary self-end">Forgot password?</Text>
+            </TouchableOpacity>
             <Button
               title="Sign In"
               onPress={() => submitForm()}

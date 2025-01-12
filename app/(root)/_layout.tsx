@@ -11,7 +11,7 @@ const Layout = () => {
   }
 
   if (!session) {
-    return <Redirect href={'/(auth)/sign-up'} />;
+    return <Redirect href={'/(auth)/sign-in'} />;
   }
 
   return (
@@ -22,7 +22,7 @@ const Layout = () => {
       <Stack.Screen name="published-ride" options={{ headerShown: false }} />
       <Stack.Screen name="request-ride" options={{ headerShown: false }} />
       <Stack.Screen name="find-ride" options={{ headerShown: false }} />
-      <Stack.Screen name="search-results" options={{ headerShown: true }} />
+      <Stack.Screen name="search-results" options={{ headerShown: true, headerTitle: 'Available Rides', headerTitleAlign: "left", headerTitleStyle: {fontFamily: 'plusjakartasans_600semibold', fontWeight: "600"} }} />
     </Stack>
   );
 };

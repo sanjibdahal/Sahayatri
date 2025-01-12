@@ -1,0 +1,22 @@
+{
+  "created_at": "2025-01-05T15:59:27.529485+00:00",
+  "departure_time": "2025-01-05 10:00 PM",
+  "destination_location": {
+    "address": "28 Kilo Bus Stop, Kavrepalanchok, Nepal",
+    "latitude": 27.625027,
+    "longitude": 85.540815
+  },
+  "id": 2,
+  "no_of_seats_available": 2,
+  "number_plate": "Na 2 Pa 2025",
+  "rider_id": "2a625100-e825-43a6-aec4-2720d4447d51",
+  "source_location": {
+    "address": "JGCQ+P2C, Aghoribaba Marg, Dhulikhel 45210, Nepal",
+    "latitude": 27.6217253,
+    "longitude": 85.5373015
+  },
+  "status": "active",
+  "vehicle_type": "car"
+}
+
+ (NOBRIDGE) LOG  User signed in successfully:  {"session": {"access_token": "eyJhbGciOiJIUzI1NiIsImtpZCI6IjAwT0lLcCt0L25jQXlETlAiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2dyYWV0ZmV0ZHZhanRuZWFveG5qLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIyYTYyNTEwMC1lODI1LTQzYTYtYWVjNC0yNzIwZDQ0NDdkNTEiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzM2MjQyODg4LCJpYXQiOjE3MzYyMzkyODgsImVtYWlsIjoic2FuamliZGFoYWwwNEBnbWFpbC5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsIjoic2FuamliZGFoYWwwNEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IlNhbmppYiBEYWhhbCIsInBob25lX251bWJlciI6Ijk4NjU1MDA1MDIiLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInBob3RvX3VybCI6Imh0dHBzOi8vZ3JhZXRmZXRkdmFqdG5lYW94bmouc3VwYWJhc2UuY28vc3RvcmFnZS92MS9vYmplY3QvcHVibGljL3Bob3Rvcy9pbWdfMTczNTk4MTk2MjcxNiIsInN1YiI6IjJhNjI1MTAwLWU4MjUtNDNhNi1hZWM0LTI3MjBkNDQ0N2Q1MSJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzM2MjM5Mjg4fV0sInNlc3Npb25faWQiOiIzZTc3ZWQwYS01NDY4LTQ0M2QtYjUwOC02Nzk4ZWFmZThmNzAiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.oBGDUCVzbqkEyGCf3pTRvqQ6j50y6y9dCUVVI4aQEfo", "expires_at": 1736242888, "expires_in": 3600, "refresh_token": "uxdT3zREU69eEyMvnjqwlQ", "token_type": "bearer", "user": {"app_metadata": [Object], "aud": "authenticated", "confirmation_sent_at": "2025-01-04T09:12:53.314818Z", "confirmed_at": "2025-01-04T09:13:08.106545Z", "created_at": "2025-01-04T09:12:53.305547Z", "email": "sanjibdahal04@gmail.com", "email_confirmed_at": "2025-01-04T09:13:08.106545Z", "id": "2a625100-e825-43a6-aec4-2720d4447d51", "identities": [Array], "is_anonymous": false, "last_sign_in_at": "2025-01-07T08:41:28.264120607Z", "phone": "", "role": "authenticated", "updated_at": "2025-01-07T08:41:28.280507Z", "user_metadata": [Object]}}, "user": {"app_metadata": {"provider": "email", "providers": [Array]}, "aud": "authenticated", "confirmation_sent_at": "2025-01-04T09:12:53.314818Z", "confirmed_at": "2025-01-04T09:13:08.106545Z", "created_at": "2025-01-04T09:12:53.305547Z", "email": "sanjibdahal04@gmail.com", "email_confirmed_at": "2025-01-04T09:13:08.106545Z", "id": "2a625100-e825-43a6-aec4-2720d4447d51", "identities": [[Object]], "is_anonymous": false, "last_sign_in_at": "2025-01-07T08:41:28.264120607Z", "phone": "", "role": "authenticated", "updated_at": "2025-01-07T08:41:28.280507Z", "user_metadata": {"email": "sanjibdahal04@gmail.com", "email_verified": true, "name": "Sanjib Dahal", "phone_number": "9865500502", "phone_verified": false, "photo_url": "https://graetfetdvajtneaoxnj.supabase.co/storage/v1/object/public/photos/img_1735981962716", "sub": "2a625100-e825-43a6-aec4-2720d4447d51"}}}

@@ -95,7 +95,7 @@ export default function PublishRide() {
       console.log("Published Ride: ", publishedRide);
       router.push({
         pathname: "/(root)/published-ride",
-        params: { ride: publishedRide }
+        params: { ride: JSON.stringify(publishedRide) }
       });
 
     } catch (error) {

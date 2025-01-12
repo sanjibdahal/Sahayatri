@@ -134,7 +134,7 @@ const RouteMap = ({ userLocation, destination, walkingPoints }: {
             latitude: destination.latitude,
             longitude: destination.longitude,
           }}
-          title={destination.name}
+          title={destination.address}
           pinColor="red"
         />
       )}
@@ -149,7 +149,7 @@ const RouteMap = ({ userLocation, destination, walkingPoints }: {
       {walkingRoutes.length > 0 && (
         <Polyline
           coordinates={walkingRoutes}
-          strokeColor="#8888FF"
+          strokeColor="#000000"
           strokeWidth={4}
           lineDashPattern={[5, 5]}
         />
@@ -157,9 +157,20 @@ const RouteMap = ({ userLocation, destination, walkingPoints }: {
 
       {walkingRoutes.length > 0 && (
         <Marker
-          coordinate={walkingRoutes[0]}
+          coordinate={walkingRoutes[1]}
           title="Walking Start"
-          pinColor="#8888FF"
+          pinColor="#000000"
+        />
+      )}
+
+      {walkingRoutes.length > 0 && (
+        <Marker
+          coordinate={{
+            latitude: walkingRoutes[walkingRoutes.length - 1].latitude,
+            longitude: walkingRoutes[walkingRoutes.length - 1].longitude,
+          }}
+          title="Walking End (Destination)"
+          pinColor="#000000"
         />
       )}
     </MapView>

@@ -6,7 +6,7 @@ export default function ChatLayout() {
     <Stack.Screen
       name="chat" 
       options={{
-        headerShown: false, // Hides the header for this screen
+        headerShown: false,
       }}
     />
     <Stack.Screen
