@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthProvider";
 import { Feather } from "@expo/vector-icons";
@@ -8,12 +8,42 @@ import { Message } from "@/types/type";
 
 const ChatDetail = () => {
   const { chatId } = useLocalSearchParams();
+  const router = useRouter();
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [otherUser, setOtherUser] = useState(null);
 
   useEffect(() => {
     if (!user) return;
+
+    const fetchChatDetails = async () => {
+      const { data, error } = await supabase
+        .from('chats')
+        .select(`
+          *,
+          user_1:user_1_id(id, name, photo_url),
+          user_2:user_2_id(id, name, photo_url)
+        `)
+        .eq('id', chatId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching chat:', error);
+        return;
+      }
+
+      const other = data.user_1.id === user?.id ? data.user_2 : data.user_1;
+      setOtherUser(other);
+      
+      // Set navigation params for header
+      router.setParams({
+        name: other.name,
+        photo_url: other.photo_url
+      });
+    };
+
+    fetchChatDetails();
 
     fetchMessages();
 

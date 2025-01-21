@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+import { View, Image, Text } from "react-native";
 
 export default function ChatLayout() {
   return (
@@ -11,10 +12,25 @@ export default function ChatLayout() {
     />
     <Stack.Screen
         name="[chatId]"
-        options={{
-          title: "Chat",
-          headerShown: true,
-        }}
+        options={({ route }) => ({
+          headerTitle: () => {
+            const { name, photo_url } = route.params as any;
+            return (
+              <View className="flex-row items-center">
+                {photo_url && (
+                  <Image
+                    source={{ uri: photo_url }}
+                    className="w-8 h-8 rounded-full mr-2"
+                  />
+                )}
+                <Text className="text-lg font-plusjakartasans_600semibold">
+                  {name || 'Chat'}
+                </Text>
+              </View>
+            );
+          },
+          headerBackButtonMenuEnabled: true,
+        })}
       />
   </Stack>
   );

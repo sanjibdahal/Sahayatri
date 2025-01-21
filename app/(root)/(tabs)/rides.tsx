@@ -39,6 +39,8 @@ export default function Rides() {
     }
   };
 
+  
+
   if (isLoading) {
     return (
       <SafeAreaView className="flex-1 bg-[#e1e1e1]">
@@ -90,7 +92,14 @@ export default function Rides() {
                 <RideCard
                   ride={item}
                   showImage={true}
-                  onPress={() => { }}
+                  onPress={() => { const walkingPoints = null;
+                    router.push({
+                      pathname: `/ride/${item.id}`,
+                      params: {
+                        ride: JSON.stringify(item),
+                        walkingPoints: JSON.stringify(walkingPoints)
+                      }
+                    }); }}
                 />
               )}
               ItemSeparatorComponent={() => <View className="h-4" />}
@@ -115,7 +124,14 @@ export default function Rides() {
                 <RideCard
                   ride={item}
                   showImage={true}
-                  onPress={() => { console.log('hello');router.push(`/ride/${item.id}`) }}
+                  onPress={() => { const walkingPoints = null;
+                    router.push({
+                      pathname: `/ride/${item.id}`,
+                      params: {
+                        ride: JSON.stringify(item),
+                        walkingPoints: JSON.stringify(walkingPoints)
+                      }
+                    }); }}
                 />
               )}
               ItemSeparatorComponent={() => <View className="h-4" />}

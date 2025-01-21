@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -8,16 +8,19 @@ import Maps from '@/components/Maps';
 import { MatchedRide, Ride } from '@/types/type';
 import { Feather } from '@expo/vector-icons';
 import { useRides } from '@/hooks/useRides';
+import { useAuth } from '@/context/AuthProvider';
 
 export default function RideDetails() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
+  const { user } = useAuth();
   const params = useLocalSearchParams();
   const [ride, setRide] = useState<Ride | MatchedRide | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [walkingPoints, setWalkingPoints] = useState([]);
-  const [riderInfo, setRiderInfo] = useState<{ name: string; photo_url: string } | null>(null);
-  const { requestRide } = useRides();
+  const [riderInfo, setRiderInfo] = useState<{ id: string; name: string; photo_url: string } | null>(null);
+  const { requestRide, cancelRide } = useRides();
+  const [requester, setRequester] = useState<{ id: string; name: string; photo_url: string } | null>(null);
 
   useEffect(() => {
     const walkingPointsData = JSON.parse(params.walkingPoints as string);
@@ -39,6 +42,17 @@ export default function RideDetails() {
       setRiderInfo(data.users);
       console.log('Ride Details: ', data);
       console.log("Params: ", JSON.parse(params.ride as string));
+      if (data.status === 'booked' && user?.id === data.rider_id) {
+        const { data: requestData, error: requestError } = await supabase
+          .from('ride_request')
+          .select('*, users!ride_request_user_id_fkey(id, name, photo_url)')
+          .eq('ride_id', params.id)
+          .eq('status', 'accepted')
+          .single();
+
+        if (requestError) throw requestError;
+        setRequester(requestData.users);
+      }
     } catch (error) {
       console.error('Error loading ride details:', error);
     } finally {
@@ -46,9 +60,46 @@ export default function RideDetails() {
     }
   };
 
-  const chatWithRider = () => {
-    // add logic to add users in chat
-    router.push(`/chats/${ride?.id}`);
+  const chatWithRider = async () => {
+    try {
+      if (!user || !requester) return;
+  
+      // Check if chat already exists
+      const { data: existingChat, error: chatError } = await supabase
+        .from('chats')
+        .select('id')
+        .or(`user_1_id.eq.${user.id},user_2_id.eq.${user.id}`)
+        .or(`user_1_id.eq.${requester.id},user_2_id.eq.${requester.id}`)
+        .single();
+  
+      if (chatError && chatError.code !== 'PGRST116') {
+        throw chatError;
+      }
+  
+      let chatId;
+  
+      if (existingChat) {
+        chatId = existingChat.id;
+      } else {
+        // Create new chat
+        const { data: newChat, error: createError } = await supabase
+          .from('chats')
+          .insert({
+            user_1_id: user.id,
+            user_2_id: requester.id
+          })
+          .select('id')
+          .single();
+  
+        if (createError) throw createError;
+        chatId = newChat.id;
+      }
+  
+      router.push(`/chats/${chatId}`);
+    } catch (error) {
+      console.error('Error setting up chat:', error);
+      alert('Failed to start chat. Please try again.');
+    }
   };
 
   if (isLoading) {
@@ -76,6 +127,31 @@ export default function RideDetails() {
     }
   };
 
+  const handleCancel = async () => {
+    Alert.alert("Cancel Ride", "Are you sure you want to cancel this ride?",
+      [{
+        text: "No",
+        onPress: () => console.log("Cancel Pressed"),
+      },
+      {
+        text: "Yes, Cancel",
+        onPress: async () => {
+          try {
+            setIsLoading(true);
+            await cancelRide(params.id as string);
+            router.replace('/(root)/(tabs)/rides');
+          } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to cancel ride. Please try again.');
+          }
+        }
+      }
+
+      ]);
+  };
+
+  const isRider = user?.id === ride.rider_id;
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView>
@@ -96,7 +172,7 @@ export default function RideDetails() {
               />
               <View>
                 <Text className="text-lg font-plusjakartasans_600semibold">{riderInfo.name}</Text>
-                <Text className="text-sm font-plusjakartasans_500medium text-gray">Rider</Text>
+                <Text className="text-sm font-plusjakartasans_500medium text-gray">Rider {isRider ? '(You)' : ''}</Text>
 
               </View>
             </View>
@@ -145,16 +221,51 @@ export default function RideDetails() {
           )}
 
           {ride.status === 'booked' ? (
-            <Button
-              title="Chat with Rider"
-              onPress={chatWithRider}
-            />
+            <View>
+            {user?.id === ride.rider_id && requester && (
+              <View className="mb-6 bg-gray-50 rounded-xl flex">
+                <Text className="text-lg font-plusjakartasans_600semibold mb-2">
+                  Ride Requester
+                </Text>
+                <View className="">
+                  <View className="flex-row items-center mb-2">
+                    <Image 
+                      source={{ uri: requester.photo_url }} 
+                      className="w-12 h-12 rounded-full mr-3"
+                    />
+                    <Text className="text-lg font-plusjakartasans_500medium">
+                      {requester.name}
+                    </Text>
+                  </View>
+                  <Button
+                    title="Chat"
+                    onPress={chatWithRider}
+                    containerStyles="px-6"
+                  />
+                </View>
+              </View>
+            )}
+          </View>
+          ) : (isRider ? (
+            <View className='flex-row gap-x-2 flex-1'>
+              <Button
+                title="Edit Ride"
+                onPress={() => router.push({ pathname: '/edit-ride', params: { id: ride.id } })}
+                isSecondary={true}
+                containerStyles='flex-1'
+              />
+              <Button
+                title="Cancel Ride"
+                onPress={ handleCancel }
+                containerStyles='flex-1 bg-red'
+              />
+            </View>
           ) : (
             <Button
               title="Request Ride"
               onPress={requestRides}
             />
-          )}
+          ))}
         </View>
         {/* <RideCard ride={ride} showMap={true} onPress={() => {}} /> */}
       </ScrollView>

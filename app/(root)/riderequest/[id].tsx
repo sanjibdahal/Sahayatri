@@ -42,9 +42,46 @@ export default function RideRequestDetails() {
     }
   };
 
-  const chatWithRider = () => {
-    // add logic to add users in chat
-    router.push(`/chats/${ride?.id}`);
+  const chatWithRider = async () => {
+    try {
+      if (!user || !requester) return;
+  
+      // Check if chat already exists
+      const { data: existingChat, error: chatError } = await supabase
+        .from('chats')
+        .select('id')
+        .or(`user_1_id.eq.${user.id},user_2_id.eq.${user.id}`)
+        .or(`user_1_id.eq.${requester.id},user_2_id.eq.${requester.id}`)
+        .single();
+  
+      if (chatError && chatError.code !== 'PGRST116') {
+        throw chatError;
+      }
+  
+      let chatId;
+  
+      if (existingChat) {
+        chatId = existingChat.id;
+      } else {
+        // Create new chat
+        const { data: newChat, error: createError } = await supabase
+          .from('chats')
+          .insert({
+            user_1_id: user.id,
+            user_2_id: requester.id
+          })
+          .select('id')
+          .single();
+  
+        if (createError) throw createError;
+        chatId = newChat.id;
+      }
+  
+      router.push(`/chats/${chatId}`);
+    } catch (error) {
+      console.error('Error setting up chat:', error);
+      alert('Failed to start chat. Please try again.');
+    }
   };
 
   if (isLoading) {

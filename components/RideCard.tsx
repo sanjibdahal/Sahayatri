@@ -90,11 +90,11 @@ export default function RideCard({ ride, onPress, containerStyles, showMap, show
                         {ride.no_of_seats_available} {ride.no_of_seats_available==1? 'seat' : 'seats'}
                     </Text>
                 </View>
-                <TouchableOpacity onPress={onPress}>
+                {ride.status!='cancelled' && <TouchableOpacity onPress={onPress}>
                     <Text className="text-primary font-plusjakartasans_600semibold">
                         View Details
                     </Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
             {'sourceWalkingTime' in ride && (ride.sourceWalkingTime > 0 || ride.destinationWalkingTime > 0) && (
         <View className="mt-2 pt-2 border-t border-gray-100">

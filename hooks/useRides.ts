@@ -28,6 +28,13 @@ function calculateWalkingTime(distance: number): number {
   return Math.round(distance / avgWalkingSpeed);
 }
 
+const isWithinTimeRange = (time1: string, time2: string, rangeInHours = 2) => {
+  const date1 = new Date(time1);
+  const date2 = new Date(time2);
+  const diffInHours = Math.abs(date1.getTime() - date2.getTime()) / (1000 * 60 * 60);
+  return diffInHours <= rangeInHours;
+};
+
 export function useRides() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -224,6 +231,70 @@ export function useRides() {
     }
   };
 
+  const updateRide = async (rideId: string, updateData: any) => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from("rides")
+        .update({
+          vehicle_type: updateData.vehicleType,
+          number_plate: updateData.number_plate,
+          no_of_seats_available: parseInt(updateData.no_of_seats_available),
+          source_location: updateData.sourceLocation,
+          destination_location: updateData.destinationLocation,
+          departure_time: updateData.departure_time,
+        })
+        .eq('id', rideId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const cancelRide = async (rideId: string) => {
+    try {
+      setIsLoading(true);
+      
+      // Update ride status to cancelled
+      const { error: rideError } = await supabase
+        .from("rides")
+        .update({ status: 'cancelled' })
+        .eq('id', rideId);
+
+      if (rideError) throw rideError;
+
+      // Delete associated notifications
+      const { error: notificationError } = await supabase
+        .from("notifications")
+        .delete()
+        .eq('ride_id', rideId);
+
+      if (notificationError) throw notificationError;
+
+      // Delete associated ride requests
+      const { error: requestError } = await supabase
+        .from("ride_request")
+        .delete()
+        .eq('ride_id', rideId);
+
+      if (requestError) throw requestError;
+
+      return true;
+    } catch (err: any) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     publishRide,
     fetchAvailableRides,
@@ -231,6 +302,8 @@ export function useRides() {
     searchRides,
     requestRide,
     requestedRide,
+    updateRide,
+    cancelRide,
     isLoading,
     error,
   };

@@ -77,7 +77,7 @@ const ChatList = () => {
 
   if (isLoading || loading) {
     return (
-      <SafeAreaView className="flex-1 bg-[#dcdcdc]">
+      <SafeAreaView className="flex-1 bg-[#a3a3a3]">
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" className='color-primary' />
         </View>
@@ -130,15 +130,15 @@ const ChatList = () => {
                   asChild
                 >
                   <TouchableOpacity>
-                  <View className="flex-row items-center p-3 border-b">
-                    {otherUser.photo_url && (
-                      <Image
-                        source={{ uri: otherUser.photo_url }}
-                        style={{ width: 40, height: 40, borderRadius: 20 }}
-                      />
-                    )}
-                    <Text className="text-lg ml-3">{otherUser.name}</Text>
-                  </View>
+                  <View className="flex-row items-center p-3 bg-white flex mb-2 rounded-2xl">
+                      {photo_url && (
+                        <Image
+                          source={{ uri: photo_url }}
+                          style={{ width: 40, height: 40, borderRadius: 20 }}
+                        />
+                      )}
+                      <Text className="text-lg font-plusjakartasans_500medium ml-3">{name}</Text>
+                    </View>
                   </TouchableOpacity>
                 </Link>
               );
