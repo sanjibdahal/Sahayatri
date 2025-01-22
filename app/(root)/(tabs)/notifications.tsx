@@ -30,6 +30,26 @@ const Notifications = () => {
         fetchNotifications();
     }, [user?.id]);
 
+    const handleNotificationClick = async (notification: any) => {
+        try {
+            await supabase
+                .from('notifications')
+                .delete()
+                .eq('id', notification.id);
+            setNotifications((prev: any) =>
+                prev.filter((notif: any) => notif.id !== notification.id)
+            );
+
+            if (notification.type === 'Ride Request Accepted' || 
+                notification.type === 'Ride Request Rejected') {
+                router.push('/rides');
+            }
+        } catch (error) {
+            console.error('Error deleting notification:', error);
+        }
+    };
+
+
     const confirmRequest = async (notification: any) => {
         try {
             const { data: rideRequest, error: rideRequestError } = await supabase
@@ -138,7 +158,14 @@ const Notifications = () => {
                                     <CustomButton
                                         title="View Ride"
                                         containerStyles="flex-1 py-3 mt-2"
-                                        onPress={() => router.push('/rides')}
+                                        onPress={() => handleNotificationClick(notification)}
+                                    />
+                                )}
+                                {notification.type === 'Ride Request Rejected' && (
+                                    <CustomButton
+                                        title="View Available Rides"
+                                        containerStyles="flex-1 py-3 mt-2"
+                                        onPress={() => handleNotificationClick(notification)}
                                     />
                                 )}
                                 {notification.type === 'Request for a ride' && (
