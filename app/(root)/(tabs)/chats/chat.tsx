@@ -112,6 +112,7 @@ const ChatList = () => {
             renderItem={({ item }) => {
               // console.log("Item in render:", item);
               const otherUser = item.other_user;
+              // console.log("Item ID:", item.id);
               // console.log("User in render:", otherUser);
               if (!otherUser) {
                 return (
