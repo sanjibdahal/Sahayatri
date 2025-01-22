@@ -124,8 +124,11 @@ const ChatList = () => {
               return (
                 <Link
                   href={{
-                    pathname: `/(tabs)/chats/[chatId]`,
-                    params: { chatId: item.id },
+                    pathname: "/chats/[chatID]",
+                    params: { chatID: item.id,
+                      name: name,
+                      photo_url: photo_url, 
+                     },
                   }}
                   asChild
                 >

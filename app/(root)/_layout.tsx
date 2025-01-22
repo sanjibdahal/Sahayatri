@@ -25,6 +25,7 @@ const Layout = () => {
       <Stack.Screen name="edit-ride" options={{ headerShown: false }} />
       <Stack.Screen name="search-results" options={{ headerShown: true, headerTitle: 'Available Rides', headerTitleAlign: "left", headerTitleStyle: {fontFamily: 'PlusJakartaSans_600SemiBold', fontWeight: "600"} }} />
       <Stack.Screen name="ride/[id]" options={{ headerShown: true, headerTitle: 'Ride Information', headerTitleStyle: {fontFamily: 'PlusJakartaSans_600SemiBold', fontWeight: "600"}  }} />
+      <Stack.Screen name="riderequest/[id]" options={{ headerShown: true, headerTitle: 'Ride Information', headerTitleStyle: {fontFamily: 'PlusJakartaSans_600SemiBold', fontWeight: "600"}  }} />
     </Stack>
   );
 };

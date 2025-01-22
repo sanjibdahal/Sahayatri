@@ -95,7 +95,7 @@ export default function RideDetails() {
         chatId = newChat.id;
       }
   
-      router.push(`/chats/${chatId}`);
+      router.replace(`/chats/${chatId}`);
     } catch (error) {
       console.error('Error setting up chat:', error);
       alert('Failed to start chat. Please try again.');

@@ -8,15 +8,19 @@ import Maps from '@/components/Maps';
 import { MatchedRide, Ride } from '@/types/type';
 import { Feather } from '@expo/vector-icons';
 import { useRides } from '@/hooks/useRides';
+import { useAuth } from '@/context/AuthProvider';
+import { set } from 'date-fns';
 
 export default function RideRequestDetails() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
+  const { user } = useAuth();
   const [ride, setRide] = useState<Ride | MatchedRide | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [walkingPoints, setWalkingPoints] = useState([]);
-  const [riderInfo, setRiderInfo] = useState<{ name: string; photo_url: string } | null>(null);
+  const [riderInfo, setRiderInfo] = useState<{ id: string; name: string; photo_url: string } | null | undefined>(null);
   const { requestRide } = useRides();
+  const [requester, setRequester] = useState<{ id: string | undefined; name: string; photo_url: string } | null | undefined>(null);
 
   useEffect(() => {
     loadRideDetails();
@@ -33,6 +37,7 @@ export default function RideRequestDetails() {
       if (error) throw error;
       setRide(data);
       setRiderInfo(data.users);
+      setRequester({id: user?.id, name: user?.user_metadata.name, photo_url: user?.user_metadata.photo_url});
       console.log('Ride Details: ', data);
       
     } catch (error) {

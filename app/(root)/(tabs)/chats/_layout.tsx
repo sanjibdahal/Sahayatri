@@ -1,5 +1,6 @@
-import { Stack } from "expo-router";
-import { View, Image, Text } from "react-native";
+import { router, Stack } from "expo-router";
+import { View, Image, Text, TouchableOpacity } from "react-native";
+import Feather from '@expo/vector-icons/Feather';
 
 export default function ChatLayout() {
   return (
@@ -17,6 +18,9 @@ export default function ChatLayout() {
             const { name, photo_url } = route.params as any;
             return (
               <View className="flex-row items-center">
+                <TouchableOpacity className="p-2 mr-2" onPress={() => router.replace("/(root)/(tabs)/chats/chat")}>
+                  <Feather name="arrow-left" size={24} color="black" />
+                </TouchableOpacity>
                 {photo_url && (
                   <Image
                     source={{ uri: photo_url }}
@@ -29,7 +33,9 @@ export default function ChatLayout() {
               </View>
             );
           },
-          headerBackButtonMenuEnabled: true,
+          headerBackButtonMenuEnabled: false,
+          headerBackVisible: false,
+          // headerBackImageSource: icons.leftArrow,
         })}
       />
   </Stack>

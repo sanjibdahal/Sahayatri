@@ -7,7 +7,8 @@ import { Feather } from "@expo/vector-icons";
 import { Message } from "@/types/type";
 
 const ChatDetail = () => {
-  const { chatId } = useLocalSearchParams();
+  const { chatID } = useLocalSearchParams();
+  const { name, photo_url } = useLocalSearchParams();
   const router = useRouter();
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -25,7 +26,7 @@ const ChatDetail = () => {
           user_1:user_1_id(id, name, photo_url),
           user_2:user_2_id(id, name, photo_url)
         `)
-        .eq('id', chatId)
+        .eq('id', chatID)
         .single();
 
       if (error) {
@@ -48,10 +49,10 @@ const ChatDetail = () => {
     fetchMessages();
 
     const channel = supabase
-      .channel(`realtime:messages:chat_id=${chatId}`)
+      .channel(`realtime:messages:chat_id=${chatID}`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages", filter: `chat_id=eq.${chatId}` },
+        { event: "INSERT", schema: "public", table: "messages", filter: `chat_id=eq.${chatID}` },
         (payload: { new: Message }) => {
           setMessages((prev) => [...prev, payload.new]);
         }
@@ -61,13 +62,13 @@ const ChatDetail = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [chatId, user]);
+  }, [chatID, user]);
 
   const fetchMessages = async () => {
     const { data, error } = await supabase
       .from("messages")
       .select("*")
-      .eq("chat_id", chatId)
+      .eq("chat_id", chatID)
       .order("created_at", { ascending: true });
 
     if (error) {
@@ -81,7 +82,7 @@ const ChatDetail = () => {
     if (!newMessage || !user) return;
 
     const { error } = await supabase.from("messages").insert({
-      chat_id: chatId,
+      chat_id: chatID,
       sender_id: user.id,
       message: newMessage,
     });
