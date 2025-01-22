@@ -64,7 +64,6 @@ export default function RideDetails() {
     try {
       if (!user || !requester) return;
   
-      // Check if chat already exists
       const { data: existingChat, error: chatError } = await supabase
         .from('chats')
         .select('id')
@@ -95,7 +94,14 @@ export default function RideDetails() {
         chatId = newChat.id;
       }
   
-      router.replace(`/chats/${chatId}`);
+      router.push({
+          pathname: "/chats/[chatID]",
+          params: {
+            chatID: chatId,
+            name: requester.name,
+            photo_url: requester.photo_url
+          }
+        });
     } catch (error) {
       console.error('Error setting up chat:', error);
       alert('Failed to start chat. Please try again.');

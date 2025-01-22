@@ -12,7 +12,7 @@ export default function ChatLayout() {
       }}
     />
     <Stack.Screen
-        name="[chatId]"
+        name="[chatID]"
         options={({ route }) => ({
           headerTitle: () => {
             console.log('Route params: ', route.params);
