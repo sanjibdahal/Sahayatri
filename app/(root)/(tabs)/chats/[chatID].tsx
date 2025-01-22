@@ -7,51 +7,61 @@ import { Feather } from "@expo/vector-icons";
 import { Message } from "@/types/type";
 
 const ChatDetail = () => {
-  const { chatId } = useLocalSearchParams();
+  const { chatID } = useLocalSearchParams();
+  const { name, photo_url } = useLocalSearchParams();
+  console.log('Name: ', name);
+  console.log('Photo URL: ', photo_url);
   const router = useRouter();
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [otherUser, setOtherUser] = useState(null);
 
+
   useEffect(() => {
     if (!user) return;
+    console.log('Chat ID: ', chatID);
+    // const fetchChatDetails = async () => {
+    //   const { data, error } = await supabase
+    //     .from('chats')
+    //     .select(`
+    //       *,
+    //       user_1:user_1_id(id, name, photo_url),
+    //       user_2:user_2_id(id, name, photo_url)
+    //     `)
+    //     .eq('id', chatID)
+    //     .single();
 
-    const fetchChatDetails = async () => {
-      const { data, error } = await supabase
-        .from('chats')
-        .select(`
-          *,
-          user_1:user_1_id(id, name, photo_url),
-          user_2:user_2_id(id, name, photo_url)
-        `)
-        .eq('id', chatId)
-        .single();
+    //   if (error) {
+    //     console.error('Error fetching chat:', error);
+    //     return;
+    //   }
 
-      if (error) {
-        console.error('Error fetching chat:', error);
-        return;
-      }
-
-      const other = data.user_1.id === user?.id ? data.user_2 : data.user_1;
-      setOtherUser(other);
+    //   const other = data.user_1.id === user?.id ? data.user_2 : data.user_1;
+    //   setOtherUser(other);
       
-      // Set navigation params for header
-      router.setParams({
-        name: other.name,
-        photo_url: other.photo_url
-      });
-    };
+    //   // Set navigation params for header
+    //   router.setParams({
+    //     name: other.name,
+    //     photo_url: other.photo_url
+    //   });
+    // };
 
-    fetchChatDetails();
+    // fetchChatDetails();
+
+    // Set navigation params for the header from route.params
+    router.setParams({
+      name: name,
+      photo_url: photo_url,
+    });
 
     fetchMessages();
 
     const channel = supabase
-      .channel(`realtime:messages:chat_id=${chatId}`)
+      .channel(`realtime:messages:chat_id=${chatID}`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages", filter: `chat_id=eq.${chatId}` },
+        { event: "INSERT", schema: "public", table: "messages", filter: `chat_id=eq.${chatID}` },
         (payload: { new: Message }) => {
           setMessages((prev) => [...prev, payload.new]);
         }
@@ -61,13 +71,13 @@ const ChatDetail = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [chatId, user]);
+  }, [chatID, user]);
 
   const fetchMessages = async () => {
     const { data, error } = await supabase
       .from("messages")
       .select("*")
-      .eq("chat_id", chatId)
+      .eq("chat_id", chatID)
       .order("created_at", { ascending: true });
 
     if (error) {
@@ -81,7 +91,7 @@ const ChatDetail = () => {
     if (!newMessage || !user) return;
 
     const { error } = await supabase.from("messages").insert({
-      chat_id: chatId,
+      chat_id: chatID,
       sender_id: user.id,
       message: newMessage,
     });

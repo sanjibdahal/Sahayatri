@@ -14,6 +14,7 @@ export default function ChatLayout() {
         name="[chatId]"
         options={({ route }) => ({
           headerTitle: () => {
+            console.log('Route params: ', route.params);
             const { name, photo_url } = route.params as any;
             return (
               <View className="flex-row items-center">
