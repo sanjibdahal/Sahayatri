@@ -87,7 +87,7 @@ export default function SignIn() {
               onChangeText={(value) => setForm({ ...form, password: value })}
             />
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={async () => {
 
                 let { data, error } = await supabase.auth.resetPasswordForEmail(form.email);
@@ -96,7 +96,7 @@ export default function SignIn() {
               }}
             >
               <Text className="font-plusjakartasans_600semibold color-primary self-end">Forgot password?</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <Button
               title="Sign In"
               onPress={() => submitForm()}

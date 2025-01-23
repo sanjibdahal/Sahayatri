@@ -121,9 +121,9 @@ export default function RideDetails() {
   const requestRides = async () => {
     try {
       const requestedRide = await requestRide(ride);
-      console.log("Published Ride: ", requestedRide);
+      console.log("REquested Ride: ", requestedRide);
       router.push({
-        pathname: "/(root)/published-ride",
+        pathname: "/(root)/ride-request-sent",
         params: { ride: JSON.stringify(requestedRide) }
       });
 

@@ -48,37 +48,37 @@ export default function SearchResults() {
     }
   };
 
-  const storeRideRequest = async () => {
-    try {
-      setIsStoring(true);
-      const source_location = JSON.parse(params.source as string);
-      const destination_location = JSON.parse(params.destination as string);
-      const no_of_seats_available = Number(params.seats);
-      const departure_time = params.departureTime as string;
+  // const storeRideRequest = async () => {
+  //   try {
+  //     setIsStoring(true);
+  //     const source_location = JSON.parse(params.source as string);
+  //     const destination_location = JSON.parse(params.destination as string);
+  //     const no_of_seats_available = Number(params.seats);
+  //     const departure_time = params.departureTime as string;
 
-      const { error } = await supabase
-        .from('ride_requests')
-        .insert({
-          source_location,
-          destination_location,
-          seats_needed: no_of_seats_available,
-          departure_time,
-          status: 'pending',
-          notify_on_match: true
-        });
+  //     const { error } = await supabase
+  //       .from('ride_requests')
+  //       .insert({
+  //         source_location,
+  //         destination_location,
+  //         seats_needed: no_of_seats_available,
+  //         departure_time,
+  //         status: 'pending',
+  //         notify_on_match: true
+  //       });
 
-      if (error) throw error;
+  //     if (error) throw error;
 
-      // Show success message and navigate back
-      alert('We will notify you when matching rides are published!');
-      router.back();
-    } catch (error) {
-      console.error('Error storing ride request:', error);
-      alert('Failed to store ride request. Please try again.');
-    } finally {
-      setIsStoring(false);
-    }
-  };
+  //     // Show success message and navigate back
+  //     alert('We will notify you when matching rides are published!');
+  //     router.back();
+  //   } catch (error) {
+  //     console.error('Error storing ride request:', error);
+  //     alert('Failed to store ride request. Please try again.');
+  //   } finally {
+  //     setIsStoring(false);
+  //   }
+  // };
 
   const getWalkingPoints = (ride: MatchedRide) => {
     const points = [];
@@ -131,15 +131,15 @@ export default function SearchResults() {
             No rides found
           </Text>
           <Text className="text-gray text-center font-plusjakartasans mt-2">
-            No rides are currently published for your route. Try adjusting your search criteria or get notified when matching rides are published.
+            No rides are currently published for your route. Try adjusting your search criteria or check back later.
           </Text>
 
-          <Button
+          {/* <Button
             title="Notify me when rides are available"
             onPress={storeRideRequest}
             isLoading={isStoring}
             containerStyles="mt-6 w-full"
-          />
+          /> */}
         </View>
 
       </SafeAreaView>

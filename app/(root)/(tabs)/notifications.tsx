@@ -96,6 +96,7 @@ const Notifications = () => {
                 .from('ride_request')
                 .update({ status: 'rejected' })
                 .eq('ride_id', notification.ride_id)
+                .eq('status', 'pending')
                 .select()
                 .single();
 
