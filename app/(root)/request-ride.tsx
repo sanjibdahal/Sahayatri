@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Platform } from 'react-native';
+import { View, Text, ScrollView, Platform, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -40,6 +40,11 @@ export default function RequestRide() {
 
   const handleSearch = () => {
     console.log("Form Data: ", form);
+    if (!form.sourceLocation || !form.destinationLocation) {
+      setError('Please select pickup and drop-off locations');
+      return;
+    }
+    setError('');
     router.push({
       pathname: '/(root)/search-results',
       params: {
@@ -98,68 +103,74 @@ export default function RequestRide() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView className="p-4">
-        <Text className="text-2xl font-plusjakartasans_600semibold mb-6">
-          Find a Ride
-        </Text>
-
-        <SeatCounter
-          value={form.no_of_seats_available}
-          onChange={(value) => setForm({ ...form, no_of_seats_available: value })}
-          vehicleType={'car'}
-          title='Number of Seats'
-        />
-
-        <Maps sourceLocation={location ? {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude
-        } : { latitude: 0, longitude: 0 }} destinationLocation={form.destinationLocation} />
-
-
-        <InputField
-          title="Source Location"
-          imageIcon={icons.target}
-          value={form.sourceLocation?.address || 'Current Location'}
-          editable={false}
-        />
-
-        <LocationSearch
-          placeholder="Search destination"
-          value={form.destinationLocation?.address || ''}
-          onLocationSelect={(location) => setForm({ ...form, destinationLocation: location })}
-        />
-
-        <View className="mt-4 mb-6">
-          <Text className="text-lg color-graysecondary font-plusjakartasans_600semibold mb-2">Departure Time</Text>
-          <Button
-            title={form.departure_time.toLocaleString()}
-            isSecondary={true}
-            onPress={() => setShowDatePicker(true)}
-          />
-          {(showDatePicker || Platform.OS === 'ios') && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={parse(form.departure_time, 'yyyy-MM-dd hh:mm a', new Date())}
-              mode="time"
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-              onChange={handleDateChange}
-            />
-          )}
-        </View>
-
-        {error && (
-          <Text className="text-red-500 mt-2 font-plusjakartasans">
-            {error}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={0}
+      >
+        <ScrollView className="p-4" keyboardShouldPersistTaps="handled">
+          <Text className="text-2xl font-plusjakartasans_600semibold mb-6">
+            Find a Ride
           </Text>
-        )}
 
-        <Button
-          title="Request Ride"
-          onPress={handleSearch}
-          isLoading={isSubmitting}
-          containerStyles="mt-2 mb-10"
-        />
-      </ScrollView>
+          <SeatCounter
+            value={form.no_of_seats_available}
+            onChange={(value) => setForm({ ...form, no_of_seats_available: value })}
+            vehicleType={'car'}
+            title='Number of Seats'
+          />
+
+          <Maps sourceLocation={location ? {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+          } : { latitude: 0, longitude: 0 }} destinationLocation={form.destinationLocation} />
+
+
+          <InputField
+            title="Source Location"
+            imageIcon={icons.target}
+            value={form.sourceLocation?.address || 'Current Location'}
+            editable={false}
+          />
+
+          <LocationSearch
+            placeholder="Search destination"
+            value={form.destinationLocation?.address || ''}
+            onLocationSelect={(location) => setForm({ ...form, destinationLocation: location })}
+          />
+
+          <View className="mt-4 mb-6">
+            <Text className="text-lg color-graysecondary font-plusjakartasans_600semibold mb-2">Departure Time</Text>
+            <Button
+              title={form.departure_time.toLocaleString()}
+              isSecondary={true}
+              onPress={() => setShowDatePicker(true)}
+            />
+            {(showDatePicker || Platform.OS === 'ios') && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={parse(form.departure_time, 'yyyy-MM-dd hh:mm a', new Date())}
+                mode="time"
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={handleDateChange}
+              />
+            )}
+          </View>
+
+          {error && (
+            <Text className="text-red mt-2 font-plusjakartasans">
+              {error}
+            </Text>
+          )}
+
+          <Button
+            title="Request Ride"
+            onPress={handleSearch}
+            isLoading={isSubmitting}
+            containerStyles="mt-2 mb-10"
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
+import { View, Text, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthProvider";
@@ -104,11 +104,15 @@ const ChatDetail = () => {
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" className="flex-1 p-5">
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1, padding: 20 }}
+      keyboardVerticalOffset={80} // adjust if you have a header
+    >
       <FlatList
         data={messages}
         keyExtractor={(item) => item.id}
-
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}
         renderItem={({ item }) => (
           <View className={`max-w-[80%] text-white mb-2 flex items-center justify-center px-3 py-2 ${item.sender_id === user?.id ? "self-end bg-primary rounded-lg"
             : "self-start bg-gray rounded-lg"}`}>
@@ -116,16 +120,25 @@ const ChatDetail = () => {
           </View>
         )}
       />
-      <View className="flex flex-row items-center p-1">
+      <View style={{ flexDirection: 'row', alignItems: 'center', padding: 4 }}>
         <TextInput
           placeholder="Type a message..."
           value={newMessage}
           onChangeText={setNewMessage}
-          className="border border-primary font-plusjakartasans_500medium p-3 px-4 mr-2 rounded-lg flex-1"
+          style={{
+            borderWidth: 1,
+            borderColor: '#22C55E', // primary color
+            padding: 12,
+            paddingHorizontal: 16,
+            marginRight: 8,
+            borderRadius: 8,
+            flex: 1,
+            fontFamily: 'PlusJakartaSans-Medium'
+          }}
         />
         <TouchableOpacity
           onPress={sendMessage}
-          className="bg-green-500 rounded-lg px-3 py-3"
+          style={{ backgroundColor: '#22C55E', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 12 }}
         >
           <Feather name="send" size={22} color="white" />
         </TouchableOpacity>

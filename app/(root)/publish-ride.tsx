@@ -1,4 +1,4 @@
-import { View, ScrollView, Text, Platform, FlatList } from 'react-native';
+import { View, KeyboardAvoidingView, Text, Platform, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import { useRides } from '@/hooks/useRides';
@@ -177,11 +177,17 @@ export default function PublishRide() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <FlatList
-        data={[1]}
-        renderItem={() => renderContent()}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={0}
+      >
+        <FlatList
+          data={[1]}
+          renderItem={() => renderContent()}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
